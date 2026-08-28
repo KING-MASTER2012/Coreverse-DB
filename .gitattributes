@@ -1,0 +1,109 @@
+# ============================================================
+# Coreverse DB - Git Attributes
+# ============================================================
+
+
+# ============================================================
+# Text Files
+# ============================================================
+
+* text=auto
+
+
+# Source Code
+*.ts       text eol=lf
+*.tsx      text eol=lf
+*.js       text eol=lf
+*.jsx      text eol=lf
+*.mjs      text eol=lf
+*.cjs      text eol=lf
+
+# SQL / Database
+*.sql      text eol=lf
+*.pgsql    text eol=lf
+*.plpgsql  text eol=lf
+
+# Configuration
+*.json     text eol=lf
+*.jsonc    text eol=lf
+*.yaml     text eol=lf
+*.yml      text eol=lf
+*.toml     text eol=lf
+*.ini      text eol=lf
+*.conf     text eol=lf
+
+# Documentation
+*.md       text eol=lf
+*.mdx      text eol=lf
+*.txt      text eol=lf
+
+# Shell / Scripts
+*.sh       text eol=lf
+*.bash     text eol=lf
+
+# PowerShell
+*.ps1      text eol=crlf
+*.psm1     text eol=crlf
+*.psd1     text eol=crlf
+
+# Git / Editor
+.gitignore    text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+
+
+# ============================================================
+# GitHub / CI
+# ============================================================
+
+.github/*.yml       text eol=lf
+.github/*.yaml      text eol=lf
+
+
+# ============================================================
+# Files Without Extensions
+# ============================================================
+
+Dockerfile          text eol=lf
+Makefile            text eol=lf
+LICENSE             text eol=lf
+README              text eol=lf
+
+
+# ============================================================
+# Binary Files
+# ============================================================
+
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.webp      binary
+*.ico       binary
+*.pdf       binary
+
+*.zip       binary
+*.7z        binary
+*.rar       binary
+*.tar       binary
+*.gz        binary
+*.bz2       binary
+*.xz        binary
+
+*.exe       binary
+*.dll       binary
+*.so        binary
+*.dylib     binary
+*.a         binary
+*.lib       binary
+*.obj       binary
+*.o         binary
+*.pdb       binary
+
+
+# ============================================================
+# GitHub Linguist
+# ============================================================
+
+# Treat generated documentation as generated content.
+docs/book/** linguist-generated=true

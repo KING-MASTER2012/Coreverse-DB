@@ -1,0 +1,180 @@
+# ============================================================
+# Coreverse DB - Git Ignore
+# ============================================================
+
+
+# ============================================================
+# IDE / Editors
+# ============================================================
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+
+# VS Code
+.vscode/
+
+# Vim / Emacs / temporary editor files
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+
+# ============================================================
+# OS
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Windows Explorer temporary files
+$RECYCLE.BIN/
+
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Supabase local secrets / generated environment files
+supabase/.env
+supabase/.env.*
+
+
+# ============================================================
+# Logs
+# ============================================================
+
+*.log
+*.trace
+logs/
+
+
+# ============================================================
+# Runtime / Temporary Files
+# ============================================================
+
+tmp/
+temp/
+.cache/
+.cache-loader/
+
+*.tmp
+*.temp
+*.bak
+*.pid
+*.seed
+*.orig
+
+
+# ============================================================
+# Deno
+# ============================================================
+
+# Deno cache is normally outside the repository.
+# Keep this section for project-local caches if any tooling creates them.
+.deno/
+
+
+# ============================================================
+# Node.js / JavaScript Tooling
+# ============================================================
+
+node_modules/
+
+# Do NOT ignore lockfiles that belong to the project.
+# deno.lock should be committed.
+#
+# If pnpm/npm/yarn is introduced later, its lockfile should
+# normally be committed as well.
+
+
+# ============================================================
+# Build / Generated Artifacts
+# ============================================================
+
+dist/
+build/
+out/
+
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.o
+*.obj
+*.out
+*.pdb
+
+
+# ============================================================
+# Documentation
+# ============================================================
+
+# Generated mdBook output
+docs/book/
+
+
+# ============================================================
+# Coverage / Profiling
+# ============================================================
+
+coverage/
+*.lcov
+
+*.prof
+*.profraw
+*.profdata
+
+*.gcda
+*.gcno
+
+
+# ============================================================
+# Test Results
+# ============================================================
+
+test-results/
+playwright-report/
+blob-report/
+
+
+# ============================================================
+# Archives
+# ============================================================
+
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.bz2
+*.xz
+
+
+# ============================================================
+# Xcode / Apple Build Artifacts
+# ============================================================
+
+DerivedData/
