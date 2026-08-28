@@ -41,23 +41,23 @@ create index idx_engine_releases_status
   on releases.engine_releases (status);
 
 create table releases.engine_artifacts (
-                                         id                uuid primary key default gen_random_uuid(),
-                                         release_id        uuid not null references releases.engine_releases (id) on delete cascade,
-                                         os                text not null check (os in ('windows', 'linux', 'macos')),
-                                         architecture      text not null check (architecture in ('x86_64', 'arm64')),
-                                         download_url      text not null,
-                                         sha256            text not null check (sha256 ~ '^[a-f0-9]{64}$'),
-  size_bytes         bigint not null check (size_bytes > 0),
-  min_requirements  jsonb not null,
-  compiler          jsonb not null,
-  created_at        timestamptz not null default now(),
-  unique (release_id, os, architecture)
+                                         id               uuid primary key default gen_random_uuid(),
+                                         release_id       uuid not null references releases.engine_releases (id) on delete cascade,
+                                         os               text not null check (os in ('windows', 'linux', 'macos')),
+                                         architecture     text not null check (architecture in ('x86_64', 'arm64')),
+                                         download_url     text not null,
+                                         sha256           text not null check (sha256 ~ '^[a-f0-9]{64}$'),
+                                         size_bytes       bigint not null check (size_bytes > 0),
+                                         min_requirements jsonb not null,
+                                         compiler         jsonb not null,
+                                         created_at       timestamptz not null default now(),
+                                         unique (release_id, os, architecture)
 );
 
 comment on table releases.engine_artifacts is
   'Per-OS/architecture downloadable artifact for a release. sha256 is used '
-  'by the Launcher to verify binary integrity in case the distribution '
-  'source (GitHub, CDN, etc.) is ever compromised.';
+    'by the Launcher to verify binary integrity in case the distribution '
+    'source (GitHub, CDN, etc.) is ever compromised.';
 
 create index idx_engine_artifacts_release_id
   on releases.engine_artifacts (release_id);
@@ -67,19 +67,19 @@ create index idx_engine_artifacts_release_id
 -- ---------------------------------------------------------------------
 
 create or replace function releases.set_updated_at()
-returns trigger
-language plpgsql
+  returns trigger
+  language plpgsql
 as $$
 begin
   new.updated_at := now();
-return new;
+  return new;
 end;
 $$;
 
 create trigger trg_engine_releases_updated_at
   before update on releases.engine_releases
   for each row
-  execute function releases.set_updated_at();
+execute function releases.set_updated_at();
 
 -- ---------------------------------------------------------------------
 -- Row Level Security
@@ -91,14 +91,14 @@ alter table releases.engine_artifacts enable row level security;
 create policy "engine_releases_public_read"
   on releases.engine_releases
   for select
-               to anon, authenticated
-               using (true);
+  to anon, authenticated
+  using (true);
 
 create policy "engine_artifacts_public_read"
   on releases.engine_artifacts
   for select
-               to anon, authenticated
-               using (true);
+  to anon, authenticated
+  using (true);
 
 -- No INSERT/UPDATE/DELETE policies are defined for anon/authenticated on
 -- either table. Writes are performed exclusively via service_role, which
@@ -112,16 +112,16 @@ create policy "engine_artifacts_public_read"
 -- ---------------------------------------------------------------------
 
 create or replace function releases.get_by_version(p_version text)
-returns table (
-  id                     uuid,
-  version                text,
-  status                 text,
-  release_date           date,
-  release_notes_summary  text,
-  artifacts              jsonb
-)
-language sql
-stable
+  returns table (
+                  id                    uuid,
+                  version               text,
+                  status                text,
+                  release_date          date,
+                  release_notes_summary text,
+                  artifacts             jsonb
+                )
+  language sql
+  stable
 as $$
 select
   r.id,
@@ -130,7 +130,7 @@ select
   r.release_date,
   r.release_notes_summary,
   coalesce(
-    jsonb_agg(
+      jsonb_agg(
       jsonb_build_object(
         'os', a.os,
         'architecture', a.architecture,
@@ -140,26 +140,26 @@ select
         'min_requirements', a.min_requirements,
         'compiler', a.compiler
       )
-    ) filter (where a.id is not null),
-    '[]'::jsonb
+               ) filter (where a.id is not null),
+      '[]'::jsonb
   ) as artifacts
 from releases.engine_releases r
        left join releases.engine_artifacts a on a.release_id = r.id
 where r.version = p_version
-group by r.id;
+group by r.id, r.version, r.status, r.release_date, r.release_notes_summary;
 $$;
 
 create or replace function releases.get_latest(p_status text default 'stable')
-returns table (
-  id                     uuid,
-  version                text,
-  status                 text,
-  release_date           date,
-  release_notes_summary  text,
-  artifacts              jsonb
-)
-language sql
-stable
+  returns table (
+                  id                    uuid,
+                  version               text,
+                  status                text,
+                  release_date          date,
+                  release_notes_summary text,
+                  artifacts             jsonb
+                )
+  language sql
+  stable
 as $$
 select
   r.id,
@@ -168,7 +168,7 @@ select
   r.release_date,
   r.release_notes_summary,
   coalesce(
-    jsonb_agg(
+      jsonb_agg(
       jsonb_build_object(
         'os', a.os,
         'architecture', a.architecture,
@@ -178,15 +178,15 @@ select
         'min_requirements', a.min_requirements,
         'compiler', a.compiler
       )
-    ) filter (where a.id is not null),
-    '[]'::jsonb
+               ) filter (where a.id is not null),
+      '[]'::jsonb
   ) as artifacts
 from releases.engine_releases r
        left join releases.engine_artifacts a on a.release_id = r.id
 where r.status = p_status
-group by r.id
+group by r.id, r.version, r.status, r.release_date, r.release_notes_summary, r.version_major, r.version_minor, r.version_patch
 order by r.version_major desc, r.version_minor desc, r.version_patch desc
-  limit 1;
+limit 1;
 $$;
 
 create or replace function releases.list_releases(
@@ -194,16 +194,16 @@ create or replace function releases.list_releases(
   p_limit  int  default 20,
   p_offset int  default 0
 )
-returns table (
-  id                     uuid,
-  version                text,
-  status                 text,
-  release_date           date,
-  release_notes_summary  text,
-  artifacts              jsonb
-)
-language sql
-stable
+  returns table (
+                  id                    uuid,
+                  version               text,
+                  status                text,
+                  release_date          date,
+                  release_notes_summary text,
+                  artifacts             jsonb
+                )
+  language sql
+  stable
 as $$
 select
   r.id,
@@ -212,7 +212,7 @@ select
   r.release_date,
   r.release_notes_summary,
   coalesce(
-    jsonb_agg(
+      jsonb_agg(
       jsonb_build_object(
         'os', a.os,
         'architecture', a.architecture,
@@ -222,24 +222,20 @@ select
         'min_requirements', a.min_requirements,
         'compiler', a.compiler
       )
-    ) filter (where a.id is not null),
-    '[]'::jsonb
+               ) filter (where a.id is not null),
+      '[]'::jsonb
   ) as artifacts
 from releases.engine_releases r
        left join releases.engine_artifacts a on a.release_id = r.id
 where p_status is null or r.status = p_status
-group by r.id
+group by r.id, r.version, r.status, r.release_date, r.release_notes_summary, r.version_major, r.version_minor, r.version_patch
 order by r.version_major desc, r.version_minor desc, r.version_patch desc
-  limit p_limit
-offset p_offset;
+limit p_limit
+  offset p_offset;
 $$;
 
 -- ---------------------------------------------------------------------
 -- Grants
---
--- Schema usage + table SELECT mirror the RLS policies above. Function
--- EXECUTE is granted separately since functions are not covered by
--- table-level RLS grants.
 -- ---------------------------------------------------------------------
 
 grant usage on schema releases to anon, authenticated;
