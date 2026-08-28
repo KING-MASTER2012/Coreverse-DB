@@ -1,0 +1,38 @@
+type: object
+description: >
+  A downloadable, per-OS/architecture build of a release. sha256 is used
+  by the Launcher to verify binary integrity in case the distribution
+  source is ever compromised.
+required:
+  - os
+  - architecture
+  - download_url
+  - sha256
+  - size_bytes
+  - min_requirements
+  - compiler
+properties:
+  os:
+    type: string
+    enum: [windows, linux, macos]
+  architecture:
+    type: string
+    enum: [x86_64, arm64]
+  download_url:
+    type: string
+    format: uri
+  sha256:
+    type: string
+    pattern: '^[a-f0-9]{64}$'
+    description: Lowercase hex-encoded SHA-256 of the artifact file.
+  size_bytes:
+    type: integer
+    format: int64
+  min_requirements:
+    type: object
+    description: Free-form (validated at the API layer, not by this schema alone).
+    additionalProperties: true
+  compiler:
+    type: object
+    description: Free-form (validated at the API layer, not by this schema alone).
+    additionalProperties: true

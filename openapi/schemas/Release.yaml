@@ -1,0 +1,27 @@
+type: object
+description: >
+  Coreverse Engine release metadata. Contains no binaries -- see
+  artifacts[] for per-OS/architecture downloads.
+required:
+  - version
+  - status
+  - release_date
+  - artifacts
+properties:
+  version:
+    type: string
+    pattern: '^\d+\.\d+\.\d+$'
+    example: '1.4.2'
+  status:
+    type: string
+    enum: [stable, beta, rc, deprecated]
+  release_date:
+    type: string
+    format: date
+  release_notes_summary:
+    type: string
+    nullable: true
+  artifacts:
+    type: array
+    items:
+      $ref: './Artifact.yaml'

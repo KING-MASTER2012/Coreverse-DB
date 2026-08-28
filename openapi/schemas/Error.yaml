@@ -1,0 +1,11 @@
+type: object
+required:
+  - error
+  - message
+properties:
+  error:
+    type: string
+    description: Short machine-readable error code, e.g. "invalid_version".
+  message:
+    type: string
+    description: Human-readable explanation.

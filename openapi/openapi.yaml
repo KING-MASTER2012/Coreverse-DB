@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  title: Coreverse DB API
+  description: >
+    Centralized data-access API for the Coreverse ecosystem. Coreverse DB
+    defines and serves all data operations; Coreverse Launcher and
+    Coreverse Website consume this API and never access Postgres/Supabase
+    directly.
+  version: 0.1.0
+servers:
+  - url: https://<project-ref>.supabase.co/functions/v1
+    description: Supabase Edge Functions (production)
+  - url: http://127.0.0.1:54321/functions/v1
+    description: Local development (supabase start)
+tags:
+  - name: releases
+    description: Coreverse Engine release metadata and per-platform artifacts.
+paths:
+  /releases:
+    $ref: './paths/releases.yaml#/list'
+  /releases/latest:
+    $ref: './paths/releases.yaml#/latest'
+  /releases/{version}:
+    $ref: './paths/releases.yaml#/byVersion'
+components:
+  schemas:
+    Release:
+      $ref: './schemas/Release.yaml'
+    Artifact:
+      $ref: './schemas/Artifact.yaml'
+    Error:
+      $ref: './schemas/Error.yaml'
