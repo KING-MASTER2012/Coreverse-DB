@@ -74,3 +74,59 @@ from releases.engine_releases r
                 '{"name":"apple-clang","version":"16.0"}')
 ) as v(version, os, architecture, download_url, sha256, size_bytes, min_requirements, compiler)
             on v.version = r.version;
+
+
+-- ---------------------------------------------------------------------
+-- Identity domain seed data.
+--
+-- auth.users rows are inserted directly for local dev only -- this
+-- mirrors the standard Supabase local-seed pattern. Adjust the column
+-- list if your local GoTrue schema version differs.
+-- ---------------------------------------------------------------------
+
+insert into auth.users (
+  instance_id, id, aud, role, email, encrypted_password,
+  email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
+  created_at, updated_at
+) values
+    ('00000000-0000-0000-0000-000000000000', '11111111-1111-1111-1111-111111111111',
+     'authenticated', 'authenticated', 'alice@example.com', crypt('password123', gen_salt('bf')),
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alice Yilmaz"}',
+     now(), now()),
+    ('00000000-0000-0000-0000-000000000000', '22222222-2222-2222-2222-222222222222',
+     'authenticated', 'authenticated', 'bora@example.com', crypt('password123', gen_salt('bf')),
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bora Kaya"}',
+     now(), now()),
+    ('00000000-0000-0000-0000-000000000000', '33333333-3333-3333-3333-333333333333',
+     'authenticated', 'authenticated', 'ceyda@example.com', crypt('password123', gen_salt('bf')),
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Ceyda Demir"}',
+     now(), now())
+on conflict (id) do nothing;
+-- The trg_handle_new_auth_user trigger auto-creates matching identity.profiles rows.
+
+-- One team, Alice as owner (via create_team's normal path would need an
+-- authenticated session; for seed data we insert directly instead).
+insert into identity.teams (id, name, created_by)
+values ('44444444-4444-4444-4444-444444444444', 'Coreverse Core Team', '11111111-1111-1111-1111-111111111111');
+
+insert into identity.team_members (team_id, user_id, role)
+values
+  ('44444444-4444-4444-4444-444444444444', '11111111-1111-1111-1111-111111111111', 'owner'),
+  ('44444444-4444-4444-4444-444444444444', '22222222-2222-2222-2222-222222222222', 'admin'),
+  ('44444444-4444-4444-4444-444444444444', '33333333-3333-3333-3333-333333333333', 'member');
+
+-- A pending join request from a fourth (not-yet-created) local test flow
+-- is intentionally omitted here since it needs a real fourth auth user;
+-- exercise that via the RLS/function tests instead.
+
+insert into identity.projects
+(owner_id, team_id, name, description, archive_path, archive_size_bytes, archive_sha256)
+values
+  ('11111111-1111-1111-1111-111111111111', '44444444-4444-4444-4444-444444444444',
+   'sample-project-alpha', 'Example team-owned project for local dev.',
+   'project-archives/11111111-1111-1111-1111-111111111111/sample-project-alpha.tar.zst',
+   4200000, '4c5674f172e6f1999c07f1c029af5c3fcc701f75dd72cc85f9d32f77fc6af5da'),
+  ('33333333-3333-3333-3333-333333333333', null,
+   'sample-project-beta', 'Example personal (non-team) project for local dev.',
+   'project-archives/33333333-3333-3333-3333-333333333333/sample-project-beta.tar.zst',
+   1800000, 'f33e328e465eb73059d8e2e1f9c5eb0ba5d8f1784976503edf516719953f7575');
