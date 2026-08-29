@@ -1,4 +1,6 @@
+# yaml-language-server: $schema=https://spec.openapis.org/oas/3.1/schema/2025-09-15
 openapi: 3.1.0
+
 info:
   title: Coreverse DB API
   description: >
@@ -7,26 +9,110 @@ info:
     Coreverse Website consume this API and never access Postgres/Supabase
     directly.
   version: 0.1.0
+
 servers:
   - url: https://<project-ref>.supabase.co/functions/v1
     description: Supabase Edge Functions (production)
+
   - url: http://127.0.0.1:54321/functions/v1
     description: Local development (supabase start)
+
 tags:
   - name: releases
     description: Coreverse Engine release metadata and per-platform artifacts.
+
+  - name: teams
+    description: >
+      Teams, membership, roles, and bidirectional join/invite/ownership-transfer
+      requests.
+
+  - name: requests
+    description: >
+      Responding to (accept/reject) or cancelling a pending membership request.
+
+  - name: profiles
+    description: The caller's own profile.
+
+  - name: projects
+    description: >
+      User-uploaded project archives (metadata only -- files live in Storage).
+
 paths:
+
   /releases:
     $ref: './paths/releases.yaml#/list'
+
   /releases/latest:
     $ref: './paths/releases.yaml#/latest'
+
   /releases/{version}:
     $ref: './paths/releases.yaml#/byVersion'
+
+  /teams:
+    $ref: './paths/teams.yaml#/create'
+
+  /teams/{teamId}:
+    $ref: './paths/teams.yaml#/byId'
+
+  /teams/{teamId}/members:
+    $ref: './paths/teams.yaml#/members'
+
+  /teams/{teamId}/members/{userId}:
+    $ref: './paths/teams.yaml#/memberAction'
+
+  /teams/{teamId}/join-requests:
+    $ref: './paths/teams.yaml#/joinRequests'
+
+  /teams/{teamId}/invites:
+    $ref: './paths/teams.yaml#/invites'
+
+  /teams/{teamId}/ownership-transfer:
+    $ref: './paths/teams.yaml#/ownershipTransfer'
+
+  /teams/{teamId}/leave:
+    $ref: './paths/teams.yaml#/leave'
+
+  /requests/{requestId}/accept:
+    $ref: './paths/requests.yaml#/accept'
+
+  /requests/{requestId}/reject:
+    $ref: './paths/requests.yaml#/reject'
+
+  /requests/{requestId}/cancel:
+    $ref: './paths/requests.yaml#/cancel'
+
+  /profiles/me:
+    $ref: './paths/profiles.yaml#/me'
+
+  /projects:
+    $ref: './paths/projects.yaml#/list'
+
+  /projects/{projectId}:
+    $ref: './paths/projects.yaml#/byId'
+
 components:
   schemas:
+
     Release:
       $ref: './schemas/Release.yaml'
+
     Artifact:
       $ref: './schemas/Artifact.yaml'
+
+    Profile:
+      $ref: './schemas/Profile.yaml'
+
+    Team:
+      $ref: './schemas/Team.yaml'
+
+    TeamMember:
+      $ref: './schemas/TeamMember.yaml'
+
+    MembershipRequest:
+      $ref: './schemas/MembershipRequest.yaml'
+
+    Project:
+      $ref: './schemas/Project.yaml'
+
     Error:
       $ref: './schemas/Error.yaml'

@@ -1,0 +1,33 @@
+type: object
+required:
+  - id
+  - owner_id
+  - name
+  - archive_size_bytes
+  - archive_sha256
+properties:
+  id:
+    type: string
+    format: uuid
+  owner_id:
+    type: string
+    format: uuid
+  team_id:
+    type: string
+    format: uuid
+    nullable: true
+  name:
+    type: string
+  description:
+    type: string
+    nullable: true
+  archive_url:
+    type: string
+    format: uri
+    description: Resolved from archive_path, not the raw storage path itself.
+  archive_size_bytes:
+    type: integer
+    format: int64
+  archive_sha256:
+    type: string
+    pattern: '^[a-f0-9]{64}$'

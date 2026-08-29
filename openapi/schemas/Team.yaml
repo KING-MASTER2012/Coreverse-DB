@@ -1,0 +1,16 @@
+type: object
+required:
+  - id
+  - name
+  - member_count
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  member_count:
+    type: integer
+  created_at:
+    type: string
+    format: date-time

@@ -1,0 +1,77 @@
+accept:
+  post:
+    summary: Accept a pending join request, invite, or ownership transfer offer
+    operationId: acceptMembershipRequest
+    tags: [requests]
+    parameters:
+      - name: requestId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Request accepted and applied.
+      '403':
+        description: Caller is not authorized to decide this request.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No pending request with that id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+reject:
+  post:
+    summary: Reject a pending join request, invite, or ownership transfer offer
+    operationId: rejectMembershipRequest
+    tags: [requests]
+    parameters:
+      - name: requestId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Request rejected and removed.
+      '403':
+        description: Caller is not authorized to decide this request.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No pending request with that id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+cancel:
+  post:
+    summary: Cancel a pending request you initiated (join request, invite, or ownership offer)
+    operationId: cancelMembershipRequest
+    tags: [requests]
+    parameters:
+      - name: requestId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Request cancelled and removed.
+      '403':
+        description: Caller is not the initiator of this request.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No pending request with that id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'

@@ -1,0 +1,83 @@
+list:
+  get:
+    summary: List projects visible to the caller (owned, or via team membership)
+    operationId: listProjects
+    tags: [projects]
+    parameters:
+      - name: team_id
+        in: query
+        required: false
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Visible projects.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/Project.yaml'
+  post:
+    summary: Register a project (archive already uploaded to Storage)
+    operationId: createProject
+    tags: [projects]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [name, archive_path, archive_size_bytes, archive_sha256]
+            properties:
+              name: { type: string }
+              description: { type: string, nullable: true }
+              team_id: { type: string, format: uuid, nullable: true }
+              archive_path: { type: string }
+              archive_size_bytes: { type: integer, format: int64 }
+              archive_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+    responses:
+      '201':
+        description: Created project.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Project.yaml'
+
+byId:
+  patch:
+    summary: Update a project (owner only)
+    operationId: updateProject
+    tags: [projects]
+    parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name: { type: string }
+              description: { type: string, nullable: true }
+    responses:
+      '200':
+        description: Updated project.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Project.yaml'
+  delete:
+    summary: Delete a project (owner only)
+    operationId: deleteProject
+    tags: [projects]
+    parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Project deleted.

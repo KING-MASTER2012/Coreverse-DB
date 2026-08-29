@@ -1,0 +1,36 @@
+type: object
+description: >
+  A pending, accepted, rejected, or cancelled team membership action.
+  type=join_request: user_id requested to join, an owner/admin decides.
+  type=invite: an owner/admin invited user_id, who decides.
+  type=ownership_transfer: the owner offered ownership to user_id, who decides.
+required:
+  - id
+  - team_id
+  - user_id
+  - type
+  - initiated_by
+  - status
+  - requested_at
+properties:
+  id:
+    type: string
+    format: uuid
+  team_id:
+    type: string
+    format: uuid
+  user_id:
+    type: string
+    format: uuid
+  type:
+    type: string
+    enum: [join_request, invite, ownership_transfer]
+  initiated_by:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum: [pending, accepted, rejected, cancelled]
+  requested_at:
+    type: string
+    format: date-time

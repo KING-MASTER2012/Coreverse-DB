@@ -1,0 +1,237 @@
+create:
+  post:
+    summary: Create a team (caller becomes owner)
+    operationId: createTeam
+    tags: [teams]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [name]
+            properties:
+              name: { type: string }
+    responses:
+      '201':
+        description: Created team.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Team.yaml'
+
+byId:
+  patch:
+    summary: Rename a team (owner only)
+    operationId: renameTeam
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [name]
+            properties:
+              name: { type: string }
+    responses:
+      '200':
+        description: Updated team.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Team.yaml'
+      '403':
+        description: Caller is not the owner.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+  delete:
+    summary: Delete a team (owner only)
+    operationId: deleteTeam
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Team deleted.
+      '403':
+        description: Caller is not the owner.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+members:
+  get:
+    summary: List a team's members
+    operationId: listTeamMembers
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Team members.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/TeamMember.yaml'
+
+memberAction:
+  post:
+    summary: Promote, demote, or remove a team member
+    operationId: teamMemberAction
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+      - name: userId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [action]
+            properties:
+              action:
+                type: string
+                enum: [promote, demote, remove]
+    responses:
+      '200':
+        description: Action applied.
+      '403':
+        description: Caller is not authorized for this action.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+joinRequests:
+  post:
+    summary: Request to join a team
+    operationId: requestToJoinTeam
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '201':
+        description: Join request created.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/MembershipRequest.yaml'
+      '409':
+        description: Already a member, or a pending request already exists.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+invites:
+  post:
+    summary: Invite a specific user to a team (owner/admin only)
+    operationId: inviteToTeam
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [user_id]
+            properties:
+              user_id: { type: string, format: uuid }
+    responses:
+      '201':
+        description: Invite created.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/MembershipRequest.yaml'
+      '403':
+        description: Caller is not the owner or an admin.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+ownershipTransfer:
+  post:
+    summary: Offer team ownership to a user (owner only, target's consent required)
+    operationId: offerOwnershipTransfer
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [user_id]
+            properties:
+              user_id: { type: string, format: uuid }
+    responses:
+      '201':
+        description: Ownership transfer offer created.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/MembershipRequest.yaml'
+      '403':
+        description: Caller is not the owner.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+leave:
+  post:
+    summary: Leave a team (owner cannot leave)
+    operationId: leaveTeam
+    tags: [teams]
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Left the team.
+      '403':
+        description: The owner cannot leave -- must transfer ownership first.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'

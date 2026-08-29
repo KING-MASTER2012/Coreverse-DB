@@ -1,0 +1,15 @@
+type: object
+required:
+  - user_id
+  - role
+  - joined_at
+properties:
+  user_id:
+    type: string
+    format: uuid
+  role:
+    type: string
+    enum: [owner, admin, member]
+  joined_at:
+    type: string
+    format: date-time

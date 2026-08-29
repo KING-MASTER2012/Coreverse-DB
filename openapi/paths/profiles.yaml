@@ -1,0 +1,32 @@
+me:
+  get:
+    summary: Get the caller's own profile
+    operationId: getMyProfile
+    tags: [profiles]
+    responses:
+      '200':
+        description: The caller's profile.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Profile.yaml'
+  patch:
+    summary: Update the caller's own profile (full_name, avatar_path)
+    operationId: updateMyProfile
+    tags: [profiles]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              full_name: { type: string }
+              avatar_path: { type: string, nullable: true }
+    responses:
+      '200':
+        description: Updated profile.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Profile.yaml'
