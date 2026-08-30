@@ -130,3 +130,53 @@ values
    'sample-project-beta', 'Example personal (non-team) project for local dev.',
    'project-archives/33333333-3333-3333-3333-333333333333/sample-project-beta.tar.zst',
    1800000, 'f33e328e465eb73059d8e2e1f9c5eb0ba5d8f1784976503edf516719953f7575');
+
+
+-- ---------------------------------------------------------------------
+-- Content domain seed data (uses the same fixture users as identity).
+-- ---------------------------------------------------------------------
+
+insert into identity.platform_roles (user_id, role)
+values ('11111111-1111-1111-1111-111111111111', 'admin');
+
+insert into content.news (title, slug, body, author_id, status, published_at)
+values
+  ('Coreverse Engine 2.0 Duyuruldu', 'coreverse-engine-2-0-duyuruldu',
+   'Örnek haber içeriği -- 2.0 sürümünün mimari değişikliklerini anlatan yazı.',
+   '11111111-1111-1111-1111-111111111111', 'published', now()),
+  ('Yaklaşan Özellikler', 'yaklasan-ozellikler',
+   'Taslak halinde bir haber -- henüz yayımlanmadı.',
+   '11111111-1111-1111-1111-111111111111', 'draft', null);
+
+insert into content.polls (id, question, created_by, closes_at)
+values (
+         '55555555-5555-5555-5555-555555555555',
+         'Hangi renderer''ı daha çok kullanıyorsunuz?',
+         '11111111-1111-1111-1111-111111111111',
+         now() + interval '30 days'
+       );
+
+insert into content.poll_options (id, poll_id, label, display_order)
+values
+  ('66666666-6666-6666-6666-666666666666', '55555555-5555-5555-5555-555555555555', 'Vulkan', 1),
+  ('77777777-7777-7777-7777-777777777777', '55555555-5555-5555-5555-555555555555', 'OpenGL', 2);
+
+insert into content.poll_votes (poll_id, option_id, user_id)
+values ('55555555-5555-5555-5555-555555555555', '66666666-6666-6666-6666-666666666666',
+        '22222222-2222-2222-2222-222222222222');
+
+insert into content.discussions (id, title, body, author_id, category)
+values (
+         '88888888-8888-8888-8888-888888888888',
+         'Vulkan swapchain sorunu',
+         'Örnek tartışma içeriği -- swapchain yeniden oluşturma sırasında bir hata alıyorum.',
+         '33333333-3333-3333-3333-333333333333',
+         'help'
+       );
+
+insert into content.discussion_replies (discussion_id, author_id, body)
+values (
+         '88888888-8888-8888-8888-888888888888',
+         '22222222-2222-2222-2222-222222222222',
+         'Bunu VK_ERROR_OUT_OF_DATE_KHR kontrolüyle çözebilirsin, ilgili PR''a bakabilirsin.'
+       );
