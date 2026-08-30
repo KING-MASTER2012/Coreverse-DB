@@ -21,10 +21,6 @@ properties:
   description:
     type: string
     nullable: true
-  archive_url:
-    type: string
-    format: uri
-    description: Resolved from archive_path, not the raw storage path itself.
   archive_size_bytes:
     type: integer
     format: int64

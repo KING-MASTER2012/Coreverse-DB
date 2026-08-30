@@ -81,3 +81,36 @@ byId:
     responses:
       '204':
         description: Project deleted.
+
+download:
+  get:
+    summary: Get a short-lived signed download URL for the project archive
+    operationId: getProjectDownloadUrl
+    tags: [projects]
+    description: >
+      project-archives is a private bucket -- URLs are minted on request
+      (5 minute TTL) rather than being included in the regular project
+      representation, since access requires checking identity.projects
+      visibility (owner or team member) first.
+    parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Signed URL.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, expires_in]
+              properties:
+                url: { type: string, format: uri }
+                expires_in: { type: integer, description: Seconds until the URL expires. }
+      '404':
+        description: No project with that id, or the caller has no access.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
