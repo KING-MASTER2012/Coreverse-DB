@@ -9,8 +9,11 @@
 
 import { serve } from "@std/http/server";
 import { createUserClient } from "../_shared/supabase-client.ts";
+import { createServiceClient } from "../_shared/service-client.ts";
 import { errorResponse, jsonResponse } from "../_shared/http.ts";
 import { CreateProjectSchema, UpdateProjectSchema, UuidSchema } from "./schemas.ts";
+
+const DOWNLOAD_URL_TTL_SECONDS = 300; // 5 minutes
 
 const SELECT_COLUMNS =
   "id, owner_id, team_id, name, description, archive_path, archive_size_bytes, archive_sha256, created_at, updated_at";
@@ -65,9 +68,40 @@ serve(async (req) => {
       return jsonResponse(data, 201);
     }
 
-    const projectIdParsed = segments.length === 1 ? UuidSchema.safeParse(segments[0]) : null;
-    if (segments.length === 1 && (!projectIdParsed || !projectIdParsed.success)) {
+    const hasProjectId = segments.length === 1 || (segments.length === 2 && segments[1] === "download");
+    const projectIdParsed = hasProjectId ? UuidSchema.safeParse(segments[0]) : null;
+    if (hasProjectId && (!projectIdParsed || !projectIdParsed.success)) {
       return errorResponse("invalid_project_id", `"${segments[0]}" is not a valid UUID.`, 400);
+    }
+
+    // GET /projects/{projectId}/download -> short-lived signed URL.
+    //
+    // Access is checked with the user-scoped client first (normal RLS:
+    // owner or team member); only once that passes do we switch to the
+    // service-role client to mint the signed URL, since project-archives
+    // Storage RLS is intentionally owner-only (see the storage buckets
+    // migration) and would reject a team member's direct request.
+    if (segments.length === 2 && segments[1] === "download" && req.method === "GET") {
+      const { data: project, error: readError } = await supabase
+        .schema("identity")
+        .from("projects")
+        .select("archive_path")
+        .eq("id", projectIdParsed!.data)
+        .maybeSingle();
+
+      if (readError) return errorResponse("query_error", readError.message, 500);
+      if (!project) return errorResponse("not_found", "No project with that id, or no access.", 404);
+
+      const serviceClient = createServiceClient();
+      const { data: signed, error: signError } = await serviceClient.storage
+        .from("project-archives")
+        .createSignedUrl(project.archive_path, DOWNLOAD_URL_TTL_SECONDS);
+
+      if (signError || !signed) {
+        return errorResponse("storage_error", signError?.message ?? "could not sign URL", 500);
+      }
+
+      return jsonResponse({ url: signed.signedUrl, expires_in: DOWNLOAD_URL_TTL_SECONDS });
     }
 
     // PATCH /projects/{projectId}
