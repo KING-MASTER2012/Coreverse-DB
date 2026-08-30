@@ -24,6 +24,12 @@ tags:
     description: The caller's own profile.
   - name: projects
     description: User-uploaded project archives (metadata only -- files live in Storage).
+  - name: news
+    description: Platform news (moderator/admin write, public read of published items).
+  - name: polls
+    description: Polls with anonymous aggregated results.
+  - name: discussions
+    description: Community discussions and replies.
 paths:
   /releases:
     $ref: './paths/releases.yaml#/list'
@@ -61,6 +67,24 @@ paths:
     $ref: './paths/projects.yaml#/byId'
   /projects/{projectId}/download:
     $ref: './paths/projects.yaml#/download'
+  /news:
+    $ref: './paths/news.yaml#/list'
+  /news/{newsId}:
+    $ref: './paths/news.yaml#/byId'
+  /polls:
+    $ref: './paths/polls.yaml#/list'
+  /polls/{pollId}/vote:
+    $ref: './paths/polls.yaml#/vote'
+  /polls/{pollId}/results:
+    $ref: './paths/polls.yaml#/results'
+  /discussions:
+    $ref: './paths/discussions.yaml#/list'
+  /discussions/{discussionId}:
+    $ref: './paths/discussions.yaml#/byId'
+  /discussions/{discussionId}/replies:
+    $ref: './paths/discussions.yaml#/replies'
+  /discussions/replies/{replyId}:
+    $ref: './paths/discussions.yaml#/replyById'
 components:
   schemas:
     Release:
@@ -77,5 +101,15 @@ components:
       $ref: './schemas/MembershipRequest.yaml'
     Project:
       $ref: './schemas/Project.yaml'
+    News:
+      $ref: './schemas/News.yaml'
+    Poll:
+      $ref: './schemas/Poll.yaml'
+    PollResult:
+      $ref: './schemas/PollResult.yaml'
+    Discussion:
+      $ref: './schemas/Discussion.yaml'
+    DiscussionReply:
+      $ref: './schemas/DiscussionReply.yaml'
     Error:
       $ref: './schemas/Error.yaml'

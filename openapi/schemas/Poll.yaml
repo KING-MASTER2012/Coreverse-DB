@@ -1,0 +1,24 @@
+type: object
+required:
+  - id
+  - question
+  - options
+properties:
+  id:
+    type: string
+    format: uuid
+  question:
+    type: string
+  closes_at:
+    type: string
+    format: date-time
+    nullable: true
+  options:
+    type: array
+    items:
+      type: object
+      required: [id, label]
+      properties:
+        id: { type: string, format: uuid }
+        label: { type: string }
+        display_order: { type: integer }

@@ -1,0 +1,13 @@
+type: object
+required:
+  - option_id
+  - label
+  - vote_count
+properties:
+  option_id:
+    type: string
+    format: uuid
+  label:
+    type: string
+  vote_count:
+    type: integer

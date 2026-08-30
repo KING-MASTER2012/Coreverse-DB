@@ -1,0 +1,25 @@
+type: object
+required:
+  - id
+  - title
+  - author_id
+  - is_locked
+properties:
+  id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  body:
+    type: string
+  author_id:
+    type: string
+    format: uuid
+  category:
+    type: string
+    nullable: true
+  is_locked:
+    type: boolean
+  created_at:
+    type: string
+    format: date-time

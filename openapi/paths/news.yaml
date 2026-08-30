@@ -1,0 +1,87 @@
+list:
+  get:
+    summary: List news (published only, unless moderator or author)
+    operationId: listNews
+    tags: [news]
+    parameters:
+      - name: status
+        in: query
+        required: false
+        schema: { type: string, enum: [draft, published] }
+    responses:
+      '200':
+        description: News items.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/News.yaml'
+  post:
+    summary: Create a news item as a draft (moderator/admin only)
+    operationId: createNews
+    tags: [news]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [title, slug, body]
+            properties:
+              title: { type: string }
+              slug: { type: string }
+              body: { type: string }
+    responses:
+      '201':
+        description: Created (draft) news item.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/News.yaml'
+      '403':
+        description: Caller is not a moderator/admin.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+byId:
+  patch:
+    summary: Update a news item, e.g. to publish it (moderator/admin only)
+    operationId: updateNews
+    tags: [news]
+    parameters:
+      - name: newsId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title: { type: string }
+              body: { type: string }
+              status: { type: string, enum: [draft, published] }
+    responses:
+      '200':
+        description: Updated news item.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/News.yaml'
+  delete:
+    summary: Delete a news item (moderator/admin only)
+    operationId: deleteNews
+    tags: [news]
+    parameters:
+      - name: newsId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Deleted.

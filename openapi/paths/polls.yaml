@@ -1,0 +1,95 @@
+list:
+  get:
+    summary: List polls (with their options)
+    operationId: listPolls
+    tags: [polls]
+    responses:
+      '200':
+        description: Polls.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/Poll.yaml'
+  post:
+    summary: Create a poll with its options (moderator/admin only)
+    operationId: createPoll
+    tags: [polls]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [question, options]
+            properties:
+              question: { type: string }
+              closes_at: { type: string, format: date-time, nullable: true }
+              options:
+                type: array
+                minItems: 2
+                items:
+                  type: string
+    responses:
+      '201':
+        description: Created poll.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Poll.yaml'
+      '403':
+        description: Caller is not a moderator/admin.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+vote:
+  post:
+    summary: Cast a vote (one per poll per user; rejected if the poll is closed)
+    operationId: castVote
+    tags: [polls]
+    parameters:
+      - name: pollId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [option_id]
+            properties:
+              option_id: { type: string, format: uuid }
+    responses:
+      '201':
+        description: Vote recorded.
+      '409':
+        description: Already voted, or the poll is closed.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+results:
+  get:
+    summary: Get aggregated (anonymous) results for a poll
+    operationId: getPollResults
+    tags: [polls]
+    parameters:
+      - name: pollId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Vote counts per option.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/PollResult.yaml'

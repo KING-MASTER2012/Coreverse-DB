@@ -1,0 +1,159 @@
+list:
+  get:
+    summary: List discussions
+    operationId: listDiscussions
+    tags: [discussions]
+    parameters:
+      - name: category
+        in: query
+        required: false
+        schema: { type: string }
+    responses:
+      '200':
+        description: Discussions.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/Discussion.yaml'
+  post:
+    summary: Start a discussion
+    operationId: createDiscussion
+    tags: [discussions]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [title, body]
+            properties:
+              title: { type: string }
+              body: { type: string }
+              category: { type: string, nullable: true }
+    responses:
+      '201':
+        description: Created discussion.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Discussion.yaml'
+
+byId:
+  patch:
+    summary: Update or lock/unlock a discussion (author while unlocked, or moderator)
+    operationId: updateDiscussion
+    tags: [discussions]
+    parameters:
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title: { type: string }
+              body: { type: string }
+              is_locked: { type: boolean }
+    responses:
+      '200':
+        description: Updated discussion.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Discussion.yaml'
+  delete:
+    summary: Delete a discussion (author or moderator)
+    operationId: deleteDiscussion
+    tags: [discussions]
+    parameters:
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Deleted.
+
+replies:
+  get:
+    summary: List a discussion's replies
+    operationId: listDiscussionReplies
+    tags: [discussions]
+    parameters:
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Replies (including soft-deleted tombstones).
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/DiscussionReply.yaml'
+  post:
+    summary: Reply to a discussion (rejected if the discussion is locked)
+    operationId: replyToDiscussion
+    tags: [discussions]
+    parameters:
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [body]
+            properties:
+              body: { type: string }
+    responses:
+      '201':
+        description: Created reply.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/DiscussionReply.yaml'
+      '403':
+        description: The discussion is locked.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+
+replyById:
+  patch:
+    summary: Edit or soft-delete a reply (author or moderator)
+    operationId: updateDiscussionReply
+    tags: [discussions]
+    parameters:
+      - name: replyId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              body: { type: string }
+              deleted: { type: boolean, description: Set true to soft-delete. }
+    responses:
+      '200':
+        description: Updated reply.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/DiscussionReply.yaml'

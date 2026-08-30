@@ -1,0 +1,26 @@
+type: object
+required:
+  - id
+  - title
+  - slug
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  slug:
+    type: string
+  body:
+    type: string
+  author_id:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum: [draft, published]
+  published_at:
+    type: string
+    format: date-time
+    nullable: true
