@@ -1,0 +1,24 @@
+type: object
+required:
+  - id
+  - kind
+  - title
+  - slug
+  - base_url
+properties:
+  id:
+    type: string
+    format: uuid
+  kind:
+    type: string
+    enum: [engine_mdbook, tutorial, other]
+  title:
+    type: string
+  slug:
+    type: string
+  base_url:
+    type: string
+    format: uri
+  current_version_ref:
+    type: string
+    nullable: true

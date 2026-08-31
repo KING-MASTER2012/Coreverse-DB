@@ -1,0 +1,29 @@
+type: object
+description: >
+  A search hit. Read the full page at the matching source's base_url + path
+  -- this API only ever returns a snippet, never the full page content.
+required:
+  - page_id
+  - source_id
+  - source_slug
+  - path
+  - title
+  - rank
+properties:
+  page_id:
+    type: string
+    format: uuid
+  source_id:
+    type: string
+    format: uuid
+  source_slug:
+    type: string
+  path:
+    type: string
+  title:
+    type: string
+  snippet:
+    type: string
+    nullable: true
+  rank:
+    type: number

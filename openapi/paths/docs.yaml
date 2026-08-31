@@ -1,0 +1,103 @@
+sources:
+  get:
+    summary: List documentation sources
+    operationId: listDocSources
+    tags: [docs]
+    responses:
+      '200':
+        description: Catalog of documentation sources.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/DocSource.yaml'
+
+search:
+  get:
+    summary: Full-text search across all indexed documentation pages
+    operationId: searchDocs
+    tags: [docs]
+    parameters:
+      - name: q
+        in: query
+        required: true
+        schema: { type: string }
+      - name: kind
+        in: query
+        required: false
+        schema: { type: string, enum: [engine_mdbook, tutorial, other] }
+      - name: limit
+        in: query
+        required: false
+        schema: { type: integer, default: 20, minimum: 1, maximum: 50 }
+    responses:
+      '200':
+        description: Ranked search results.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/DocSearchResult.yaml'
+
+reindex:
+  post:
+    summary: Upsert a documentation source's pages and prune stale ones (CI only)
+    operationId: reindexDocs
+    tags: [docs]
+    description: >
+      Not user-authenticated -- called from the source repo's CI after an
+      mdBook build, authorized with a shared secret in the X-Reindex-Token
+      header (see the docs-reindex edge function). Any page previously
+      indexed for this source but not included in this call's `pages` list
+      is deleted (it was removed from the book).
+    parameters:
+      - name: X-Reindex-Token
+        in: header
+        required: true
+        schema: { type: string }
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [source, pages]
+            properties:
+              source:
+                type: object
+                required: [kind, title, slug, base_url]
+                properties:
+                  kind: { type: string, enum: [engine_mdbook, tutorial, other] }
+                  title: { type: string }
+                  slug: { type: string }
+                  base_url: { type: string, format: uri }
+                  current_version_ref: { type: string, nullable: true }
+              pages:
+                type: array
+                minItems: 1
+                items:
+                  type: object
+                  required: [path, title]
+                  properties:
+                    path: { type: string }
+                    title: { type: string }
+                    content_text: { type: string }
+    responses:
+      '200':
+        description: Reindex applied.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_id: { type: string, format: uuid }
+                upserted: { type: integer }
+                pruned: { type: integer }
+      '401':
+        description: Missing or incorrect X-Reindex-Token.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
