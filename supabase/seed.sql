@@ -91,15 +91,15 @@ insert into auth.users (
 ) values
     ('00000000-0000-0000-0000-000000000000', '11111111-1111-1111-1111-111111111111',
      'authenticated', 'authenticated', 'alice@example.com', crypt('password123', gen_salt('bf')),
-     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alice Yilmaz"}',
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alice Baker"}',
      now(), now()),
     ('00000000-0000-0000-0000-000000000000', '22222222-2222-2222-2222-222222222222',
      'authenticated', 'authenticated', 'bora@example.com', crypt('password123', gen_salt('bf')),
-     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bora Kaya"}',
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alex Taylor"}',
      now(), now()),
     ('00000000-0000-0000-0000-000000000000', '33333333-3333-3333-3333-333333333333',
      'authenticated', 'authenticated', 'ceyda@example.com', crypt('password123', gen_salt('bf')),
-     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Ceyda Demir"}',
+     now(), '{"provider":"email","providers":["email"]}', '{"full_name":"John Smith"}',
      now(), now())
 on conflict (id) do nothing;
 -- The trg_handle_new_auth_user trigger auto-creates matching identity.profiles rows.
@@ -141,17 +141,17 @@ values ('11111111-1111-1111-1111-111111111111', 'admin');
 
 insert into content.news (title, slug, body, author_id, status, published_at)
 values
-  ('Coreverse Engine 2.0 Duyuruldu', 'coreverse-engine-2-0-duyuruldu',
-   'Örnek haber içeriği -- 2.0 sürümünün mimari değişikliklerini anlatan yazı.',
+  ('Coreverse Engine 2.0 Announced', 'coreverse-engine-2.0-announced',
+   'Example news content -- An article describing the architectural changes in version 2.0.',
    '11111111-1111-1111-1111-111111111111', 'published', now()),
-  ('Yaklaşan Özellikler', 'yaklasan-ozellikler',
-   'Taslak halinde bir haber -- henüz yayımlanmadı.',
+  ('Upcoming Features', 'upcoming-features',
+   'A news report in draft form -- not yet published.',
    '11111111-1111-1111-1111-111111111111', 'draft', null);
 
 insert into content.polls (id, question, created_by, closes_at)
 values (
          '55555555-5555-5555-5555-555555555555',
-         'Hangi renderer''ı daha çok kullanıyorsunuz?',
+         'Which renderer do you use most often?',
          '11111111-1111-1111-1111-111111111111',
          now() + interval '30 days'
        );
@@ -168,8 +168,8 @@ values ('55555555-5555-5555-5555-555555555555', '66666666-6666-6666-6666-6666666
 insert into content.discussions (id, title, body, author_id, category)
 values (
          '88888888-8888-8888-8888-888888888888',
-         'Vulkan swapchain sorunu',
-         'Örnek tartışma içeriği -- swapchain yeniden oluşturma sırasında bir hata alıyorum.',
+         'Vulkan swapchain issue',
+         'Example discussion content -- I''m getting an error during swapchain rebuild.',
          '33333333-3333-3333-3333-333333333333',
          'help'
        );
@@ -178,5 +178,26 @@ insert into content.discussion_replies (discussion_id, author_id, body)
 values (
          '88888888-8888-8888-8888-888888888888',
          '22222222-2222-2222-2222-222222222222',
-         'Bunu VK_ERROR_OUT_OF_DATE_KHR kontrolüyle çözebilirsin, ilgili PR''a bakabilirsin.'
+         'You can resolve this with the VK_ERROR_OUT_OF_DATE_KHR check, and look at the relevant PR.'
        );
+
+
+-- ---------------------------------------------------------------------
+-- Docs domain seed data.
+-- ---------------------------------------------------------------------
+
+insert into docs.sources (id, kind, title, slug, base_url, current_version_ref)
+values
+  ('99999999-0000-0000-0000-000000000001', 'engine_mdbook', 'Coreverse Engine Docs',
+   'engine', 'https://docs.coreverse.dev/engine/', '2.0.0'),
+  ('99999999-0000-0000-0000-000000000002', 'tutorial', 'Getting Started Tutorials',
+   'tutorials', 'https://docs.coreverse.dev/tutorials/', null);
+
+insert into docs.pages (source_id, path, title, content_text)
+values
+  ('99999999-0000-0000-0000-000000000001', 'getting-started/installation', 'Installation',
+   'Coreverse Engine installation requires CMake and Ninja. First, install the dependencies with vcpkg, then run the cmake --preset command in the build directory.'),
+  ('99999999-0000-0000-0000-000000000001', 'rendering/vulkan-setup', 'Vulkan Setup',
+   'The Vulkan renderer uses the volk, VulkanHeaders, and VMA libraries. The steps for creating VulkanContext are described on this page.'),
+  ('99999999-0000-0000-0000-000000000002', 'first-project/hello-triangle', 'Hello Triangle',
+   'This tutorial will show you how to create your first project with Coreverse Engine and render a triangle on the screen.');
