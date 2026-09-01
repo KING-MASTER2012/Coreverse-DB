@@ -3,6 +3,8 @@ list:
     summary: List projects visible to the caller (owned, or via team membership)
     operationId: listProjects
     tags: [projects]
+    security:
+      - bearerAuth: []
     parameters:
       - name: team_id
         in: query
@@ -17,10 +19,18 @@ list:
               type: array
               items:
                 $ref: '../schemas/Project.yaml'
+      '400':
+        description: Invalid team_id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   post:
     summary: Register a project (archive already uploaded to Storage)
     operationId: createProject
     tags: [projects]
+    security:
+      - bearerAuth: []
     requestBody:
       required: true
       content:
@@ -42,12 +52,26 @@ list:
           application/json:
             schema:
               $ref: '../schemas/Project.yaml'
+      '400':
+        description: Invalid request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 byId:
   patch:
     summary: Update a project (owner only)
     operationId: updateProject
     tags: [projects]
+    security:
+      - bearerAuth: []
     parameters:
       - name: projectId
         in: path
@@ -69,10 +93,24 @@ byId:
           application/json:
             schema:
               $ref: '../schemas/Project.yaml'
+      '400':
+        description: Invalid project id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No project with that id, or the caller is not the owner.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   delete:
     summary: Delete a project (owner only)
     operationId: deleteProject
     tags: [projects]
+    security:
+      - bearerAuth: []
     parameters:
       - name: projectId
         in: path
@@ -81,12 +119,26 @@ byId:
     responses:
       '204':
         description: Project deleted.
+      '400':
+        description: Invalid project id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No project with that id, or the caller is not the owner.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 download:
   get:
     summary: Get a short-lived signed download URL for the project archive
     operationId: getProjectDownloadUrl
     tags: [projects]
+    security:
+      - bearerAuth: []
     description: >
       project-archives is a private bucket -- URLs are minted on request
       (5 minute TTL) rather than being included in the regular project
@@ -108,6 +160,12 @@ download:
               properties:
                 url: { type: string, format: uri }
                 expires_in: { type: integer, description: Seconds until the URL expires. }
+      '400':
+        description: Invalid project id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '404':
         description: No project with that id, or the caller has no access.
         content:

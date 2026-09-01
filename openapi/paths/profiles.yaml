@@ -3,6 +3,8 @@ me:
     summary: Get the caller's own profile
     operationId: getMyProfile
     tags: [profiles]
+    security:
+      - bearerAuth: []
     responses:
       '200':
         description: The caller's profile.
@@ -10,23 +12,66 @@ me:
           application/json:
             schema:
               $ref: '../schemas/Profile.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No profile found for this user.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   patch:
-    summary: Update the caller's own profile (full_name, avatar_path)
+    summary: Update the caller's own profile
     operationId: updateMyProfile
     tags: [profiles]
+    security:
+      - bearerAuth: []
     requestBody:
       required: true
       content:
         application/json:
           schema:
             type: object
+            description: At least one of full_name or avatar_path must be provided.
             properties:
-              full_name: { type: string }
-              avatar_path: { type: string, nullable: true }
+              full_name:
+                type: string
+                minLength: 1
+                maxLength: 100
+              avatar_path:
+                type: string
+                minLength: 1
+                nullable: true
+                description: >
+                  Storage path in the avatars bucket (client uploads the
+                  PNG directly to Storage first, then sends the path
+                  here).
     responses:
       '200':
-        description: Updated profile.
+        description: The updated profile.
         content:
           application/json:
             schema:
               $ref: '../schemas/Profile.yaml'
+      '400':
+        description: Invalid request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No profile found for this user.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'

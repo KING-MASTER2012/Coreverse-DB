@@ -1,0 +1,7 @@
+type: object
+description: Trivial acknowledgement body for actions that don't return a resource.
+required:
+  - ok
+properties:
+  ok:
+    type: boolean

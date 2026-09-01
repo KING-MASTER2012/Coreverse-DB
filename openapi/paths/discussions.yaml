@@ -3,6 +3,7 @@ list:
     summary: List discussions
     operationId: listDiscussions
     tags: [discussions]
+    security: []
     parameters:
       - name: category
         in: query
@@ -21,6 +22,8 @@ list:
     summary: Start a discussion
     operationId: createDiscussion
     tags: [discussions]
+    security:
+      - bearerAuth: []
     requestBody:
       required: true
       content:
@@ -39,12 +42,26 @@ list:
           application/json:
             schema:
               $ref: '../schemas/Discussion.yaml'
+      '400':
+        description: Invalid request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 byId:
   patch:
     summary: Update or lock/unlock a discussion (author while unlocked, or moderator)
     operationId: updateDiscussion
     tags: [discussions]
+    security:
+      - bearerAuth: []
     parameters:
       - name: discussionId
         in: path
@@ -67,10 +84,30 @@ byId:
           application/json:
             schema:
               $ref: '../schemas/Discussion.yaml'
+      '400':
+        description: Invalid discussion id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '403':
+        description: Caller is neither the author (while unlocked) nor a moderator.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No discussion with that id (or not authorized).
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   delete:
     summary: Delete a discussion (author or moderator)
     operationId: deleteDiscussion
     tags: [discussions]
+    security:
+      - bearerAuth: []
     parameters:
       - name: discussionId
         in: path
@@ -79,12 +116,25 @@ byId:
     responses:
       '204':
         description: Deleted.
+      '400':
+        description: Invalid discussion id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No discussion with that id (or not authorized).
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 replies:
   get:
     summary: List a discussion's replies
     operationId: listDiscussionReplies
     tags: [discussions]
+    security: []
     parameters:
       - name: discussionId
         in: path
@@ -99,10 +149,18 @@ replies:
               type: array
               items:
                 $ref: '../schemas/DiscussionReply.yaml'
+      '400':
+        description: Invalid discussion id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   post:
     summary: Reply to a discussion (rejected if the discussion is locked)
     operationId: replyToDiscussion
     tags: [discussions]
+    security:
+      - bearerAuth: []
     parameters:
       - name: discussionId
         in: path
@@ -124,6 +182,18 @@ replies:
           application/json:
             schema:
               $ref: '../schemas/DiscussionReply.yaml'
+      '400':
+        description: Invalid discussion id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: The discussion is locked.
         content:
@@ -136,6 +206,8 @@ replyById:
     summary: Edit or soft-delete a reply (author or moderator)
     operationId: updateDiscussionReply
     tags: [discussions]
+    security:
+      - bearerAuth: []
     parameters:
       - name: replyId
         in: path
@@ -157,3 +229,21 @@ replyById:
           application/json:
             schema:
               $ref: '../schemas/DiscussionReply.yaml'
+      '400':
+        description: Invalid reply id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '403':
+        description: Caller is neither the author nor a moderator.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No reply with that id (or not authorized).
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'

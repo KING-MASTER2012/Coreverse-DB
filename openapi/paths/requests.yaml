@@ -1,8 +1,10 @@
 accept:
   post:
-    summary: Accept a pending join request, invite, or ownership transfer offer
+    summary: Accept a pending membership request (join request or invite/ownership-transfer target)
     operationId: acceptMembershipRequest
     tags: [requests]
+    security:
+      - bearerAuth: []
     parameters:
       - name: requestId
         in: path
@@ -11,14 +13,36 @@ accept:
     responses:
       '200':
         description: Request accepted and applied.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Ok.yaml'
+      '400':
+        description: Invalid request id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
-        description: Caller is not authorized to decide this request.
+        description: Caller is not a relevant party to this request.
         content:
           application/json:
             schema:
               $ref: '../schemas/Error.yaml'
       '404':
-        description: No pending request with that id.
+        description: No request with that id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '409':
+        description: Request has already been decided.
         content:
           application/json:
             schema:
@@ -26,9 +50,11 @@ accept:
 
 reject:
   post:
-    summary: Reject a pending join request, invite, or ownership transfer offer
+    summary: Reject a pending membership request
     operationId: rejectMembershipRequest
     tags: [requests]
+    security:
+      - bearerAuth: []
     parameters:
       - name: requestId
         in: path
@@ -36,15 +62,37 @@ reject:
         schema: { type: string, format: uuid }
     responses:
       '200':
-        description: Request rejected and removed.
+        description: Request rejected.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Ok.yaml'
+      '400':
+        description: Invalid request id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
-        description: Caller is not authorized to decide this request.
+        description: Caller is not a relevant party to this request.
         content:
           application/json:
             schema:
               $ref: '../schemas/Error.yaml'
       '404':
-        description: No pending request with that id.
+        description: No request with that id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '409':
+        description: Request has already been decided.
         content:
           application/json:
             schema:
@@ -52,9 +100,11 @@ reject:
 
 cancel:
   post:
-    summary: Cancel a pending request you initiated (join request, invite, or ownership offer)
+    summary: Cancel a pending membership request (initiator only)
     operationId: cancelMembershipRequest
     tags: [requests]
+    security:
+      - bearerAuth: []
     parameters:
       - name: requestId
         in: path
@@ -62,15 +112,28 @@ cancel:
         schema: { type: string, format: uuid }
     responses:
       '200':
-        description: Request cancelled and removed.
-      '403':
-        description: Caller is not the initiator of this request.
+        description: Request cancelled.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Ok.yaml'
+      '400':
+        description: >
+          Invalid request id, or no *pending* request exists with that id
+          (already decided, already cancelled, or never existed --
+          cancel_request does not distinguish these cases).
         content:
           application/json:
             schema:
               $ref: '../schemas/Error.yaml'
-      '404':
-        description: No pending request with that id.
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '403':
+        description: Caller is not the initiator.
         content:
           application/json:
             schema:

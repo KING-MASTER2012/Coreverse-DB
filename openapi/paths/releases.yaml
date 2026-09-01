@@ -3,6 +3,7 @@ list:
     summary: List engine releases
     operationId: listReleases
     tags: [releases]
+    security: []
     parameters:
       - name: status
         in: query
@@ -46,6 +47,7 @@ latest:
     summary: Get the latest release for a status channel
     operationId: getLatestRelease
     tags: [releases]
+    security: []
     parameters:
       - name: status
         in: query
@@ -73,6 +75,7 @@ byVersion:
     summary: Get a release by exact version
     operationId: getReleaseByVersion
     tags: [releases]
+    security: []
     parameters:
       - name: version
         in: path

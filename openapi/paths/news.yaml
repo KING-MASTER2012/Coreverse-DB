@@ -3,6 +3,13 @@ list:
     summary: List news (published only, unless moderator or author)
     operationId: listNews
     tags: [news]
+    security:
+      - {}
+      - bearerAuth: []
+    description: >
+      Anonymous and unrelated callers only see status=published. An
+      authenticated caller who is the item's author or a platform
+      moderator/admin also sees their own drafts (RLS: news_authenticated_read).
     parameters:
       - name: status
         in: query
@@ -17,10 +24,18 @@ list:
               type: array
               items:
                 $ref: '../schemas/News.yaml'
+      '400':
+        description: Invalid status filter.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   post:
     summary: Create a news item as a draft (moderator/admin only)
     operationId: createNews
     tags: [news]
+    security:
+      - bearerAuth: []
     requestBody:
       required: true
       content:
@@ -39,8 +54,26 @@ list:
           application/json:
             schema:
               $ref: '../schemas/News.yaml'
+      '400':
+        description: Invalid request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not a moderator/admin.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '409':
+        description: A news item with that slug already exists.
         content:
           application/json:
             schema:
@@ -51,6 +84,8 @@ byId:
     summary: Update a news item, e.g. to publish it (moderator/admin only)
     operationId: updateNews
     tags: [news]
+    security:
+      - bearerAuth: []
     parameters:
       - name: newsId
         in: path
@@ -73,10 +108,30 @@ byId:
           application/json:
             schema:
               $ref: '../schemas/News.yaml'
+      '400':
+        description: Invalid news id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '403':
+        description: Caller is not a moderator/admin.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No news item with that id (or not authorized).
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
   delete:
     summary: Delete a news item (moderator/admin only)
     operationId: deleteNews
     tags: [news]
+    security:
+      - bearerAuth: []
     parameters:
       - name: newsId
         in: path
@@ -85,3 +140,15 @@ byId:
     responses:
       '204':
         description: Deleted.
+      '400':
+        description: Invalid news id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '404':
+        description: No news item with that id (or not authorized).
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'

@@ -3,6 +3,8 @@ create:
     summary: Create a team (caller becomes owner)
     operationId: createTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     requestBody:
       required: true
       content:
@@ -19,12 +21,26 @@ create:
           application/json:
             schema:
               $ref: '../schemas/Team.yaml'
+      '400':
+        description: Invalid request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 byId:
   patch:
     summary: Rename a team (owner only)
     operationId: renameTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -46,6 +62,18 @@ byId:
           application/json:
             schema:
               $ref: '../schemas/Team.yaml'
+      '400':
+        description: Invalid team id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not the owner.
         content:
@@ -56,6 +84,8 @@ byId:
     summary: Delete a team (owner only)
     operationId: deleteTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -64,6 +94,18 @@ byId:
     responses:
       '204':
         description: Team deleted.
+      '400':
+        description: Invalid team id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not the owner.
         content:
@@ -76,6 +118,8 @@ members:
     summary: List a team's members
     operationId: listTeamMembers
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -90,12 +134,26 @@ members:
               type: array
               items:
                 $ref: '../schemas/TeamMember.yaml'
+      '400':
+        description: Invalid team id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
 
 memberAction:
   post:
     summary: Promote, demote, or remove a team member
     operationId: teamMemberAction
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -119,6 +177,22 @@ memberAction:
     responses:
       '200':
         description: Action applied.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Ok.yaml'
+      '400':
+        description: Invalid team id, user id, or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not authorized for this action.
         content:
@@ -131,6 +205,8 @@ joinRequests:
     summary: Request to join a team
     operationId: requestToJoinTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -143,6 +219,18 @@ joinRequests:
           application/json:
             schema:
               $ref: '../schemas/MembershipRequest.yaml'
+      '400':
+        description: Invalid team id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '409':
         description: Already a member, or a pending request already exists.
         content:
@@ -155,6 +243,8 @@ invites:
     summary: Invite a specific user to a team (owner/admin only)
     operationId: inviteToTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -176,6 +266,18 @@ invites:
           application/json:
             schema:
               $ref: '../schemas/MembershipRequest.yaml'
+      '400':
+        description: Invalid team id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not the owner or an admin.
         content:
@@ -188,6 +290,8 @@ ownershipTransfer:
     summary: Offer team ownership to a user (owner only, target's consent required)
     operationId: offerOwnershipTransfer
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -209,6 +313,18 @@ ownershipTransfer:
           application/json:
             schema:
               $ref: '../schemas/MembershipRequest.yaml'
+      '400':
+        description: Invalid team id or request body.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: Caller is not the owner.
         content:
@@ -221,6 +337,8 @@ leave:
     summary: Leave a team (owner cannot leave)
     operationId: leaveTeam
     tags: [teams]
+    security:
+      - bearerAuth: []
     parameters:
       - name: teamId
         in: path
@@ -229,6 +347,18 @@ leave:
     responses:
       '204':
         description: Left the team.
+      '400':
+        description: Invalid team id.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
+      '401':
+        description: A valid session is required.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/Error.yaml'
       '403':
         description: The owner cannot leave -- must transfer ownership first.
         content:
