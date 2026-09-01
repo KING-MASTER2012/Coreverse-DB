@@ -48,15 +48,15 @@
 
 It provides a secure, structured, and version-controlled data platform for Coreverse applications and services, including:
 
-* Engine release distribution
-* User profiles and identity
-* Teams and memberships
-* Project metadata
-* Community news
-* Polls and voting
-* Discussions and replies
-* API access
-* File storage integration
+- Engine release distribution
+- User profiles and identity
+- Teams and memberships
+- Project metadata
+- Community news
+- Polls and voting
+- Discussions and replies
+- API access
+- File storage integration
 
 Coreverse DB intentionally separates clients from the underlying PostgreSQL implementation.
 
@@ -91,18 +91,18 @@ Applications consume the Coreverse DB API rather than connecting directly to Pos
 
 ## 🚀 Key Features
 
-| Feature                         | Description                                                                    |
-|---------------------------------| ------------------------------------------------------------------------------ |
-| 🔐 **Database-level Security**  | PostgreSQL Row Level Security, controlled functions, constraints, and triggers |
-| 👤 **Identity Management**      | Profiles, teams, memberships, invitations, and ownership transfers             |
-| 📦 **Release Management**       | Engine versions, platform artifacts, requirements, and SHA-256 verification    |
-| 📰 **Community Content**        | News, polls, discussions, and replies                                          |
-| 🗃️ **Project Metadata**         | Ownership, team association, archive metadata, and integrity information       |
-| 📡 **OpenAPI Contract**         | Explicit OpenAPI 3.1 API specification                                         |
-| 🧪 **Testing**                  | pgTAP database tests and Deno Edge Function tests                              |
-| 🔄 **Migration-driven Schema**  | Reproducible Supabase migrations                                               |
-| ☁️ **Storage Integration**      | Supabase Storage for binary/project assets                                     |
-| ⚡ **Edge Runtime**             | Deno 2-based Supabase Edge Functions                                           |
+| Feature                        | Description                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| 🔐 **Database-level Security** | PostgreSQL Row Level Security, controlled functions, constraints, and triggers |
+| 👤 **Identity Management**     | Profiles, teams, memberships, invitations, and ownership transfers             |
+| 📦 **Release Management**      | Engine versions, platform artifacts, requirements, and SHA-256 verification    |
+| 📰 **Community Content**       | News, polls, discussions, and replies                                          |
+| 🗃️ **Project Metadata**        | Ownership, team association, archive metadata, and integrity information       |
+| 📡 **OpenAPI Contract**        | Explicit OpenAPI 3.1 API specification                                         |
+| 🧪 **Testing**                 | pgTAP database tests and Deno Edge Function tests                              |
+| 🔄 **Migration-driven Schema** | Reproducible Supabase migrations                                               |
+| ☁️ **Storage Integration**     | Supabase Storage for binary/project assets                                     |
+| ⚡ **Edge Runtime**            | Deno 2-based Supabase Edge Functions                                           |
 
 ---
 
@@ -347,13 +347,13 @@ Testing is divided into database-level and Edge Function tests.
 
 Database tests use **pgTAP** and cover areas such as:
 
-* RLS behavior
-* Authorization boundaries
-* Database functions
-* Constraints
-* Triggers
-* Data integrity
-* State transitions
+- RLS behavior
+- Authorization boundaries
+- Database functions
+- Constraints
+- Triggers
+- Data integrity
+- State transitions
 
 ### Edge Function Testing
 

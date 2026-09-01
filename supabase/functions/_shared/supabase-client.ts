@@ -1,7 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, } from '@supabase/supabase-js';
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL',)!;
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY',)!;
 
 // Unlike releases/index.ts (fully public, read-only), the identity domain
 // functions call SECURITY DEFINER Postgres functions that check auth.uid()
@@ -9,10 +9,10 @@ const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 // That only resolves correctly if the caller's own JWT is forwarded to
 // PostgREST -- so this client is built per-request from the incoming
 // Authorization header, never from a fixed service/anon credential alone.
-export function createUserClient(req: Request) {
-  const authHeader = req.headers.get("Authorization") ?? "";
+export function createUserClient(req: Request,) {
+  const authHeader = req.headers.get('Authorization',) ?? '';
   return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: { headers: { Authorization: authHeader } },
-    auth: { persistSession: false },
-  });
+    global: { headers: { Authorization: authHeader, }, },
+    auth: { persistSession: false, },
+  },);
 }

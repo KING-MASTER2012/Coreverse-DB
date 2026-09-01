@@ -8,5 +8,20 @@
     "@std/http/server": "https://deno.land/std@0.224.0/http/server.ts",
     "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
     "zod": "https://esm.sh/zod@3.23.8"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "trailingCommas": "always",
+    "exclude": [
+      "node_modules/",
+      "dist/",
+      "build/",
+      "generated/"
+    ]
   }
 }
