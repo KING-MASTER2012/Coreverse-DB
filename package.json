@@ -1,0 +1,24 @@
+{
+  "name": "@coreverse/db-client",
+  "version": "0.1.0",
+  "description": "Typed TypeScript client for the Coreverse DB API, generated from openapi/openapi.yaml.",
+  "type": "module",
+  "license": "GPL-3.0-only",
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "generate": "orval --config orval.config.ts",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run generate && git diff --exit-code src/generated && npm run typecheck"
+  },
+  "devDependencies": {
+    "@redocly/cli": "^2.49.1",
+    "orval": "^8.27.0",
+    "typescript": "^5.9.0",
+    "zod": "^4.5.4"
+  }
+}
