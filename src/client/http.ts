@@ -49,6 +49,12 @@ export interface CoreverseClientConfig {
    * public per the spec's `security: []`.
    */
   getAuthToken?: () => string | null | undefined | Promise<string | null | undefined>;
+  /**
+   * Override the fetch implementation used for every request. Defaults to
+   * the global fetch. Mainly for tests (inject a mock) or non-global
+   * environments -- most consumers never need to set this.
+   */
+  fetch?: typeof fetch;
 }
 
 let config: CoreverseClientConfig | null = null;
@@ -73,7 +79,7 @@ function requireConfig(): CoreverseClientConfig {
 // with params substituted) -- baseUrl is joined in here, not per-call, so
 // generated code never needs to know which environment it's running in.
 export async function coreverseFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
-  const { baseUrl, getAuthToken } = requireConfig();
+  const { baseUrl, getAuthToken, fetch: fetchOverride } = requireConfig();
 
   const headers = new Headers(options.headers);
   if (options.body !== undefined && !headers.has("Content-Type")) {
@@ -85,7 +91,8 @@ export async function coreverseFetch<T>(url: string, options: RequestInit = {}):
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${baseUrl}${url}`, { ...options, headers });
+  const doFetch = fetchOverride ?? fetch;
+  const response = await doFetch(`${baseUrl}${url}`, { ...options, headers });
 
   // 204 No Content (deleteTeam, leaveTeam, deleteProject, deleteDiscussion,
   // deleteNews) -- nothing to parse, and `as T` is correct there since

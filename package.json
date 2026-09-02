@@ -10,15 +10,22 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "engines": {
+    "node": ">=22.18.0"
+  },
   "scripts": {
     "generate": "orval --config orval.config.ts",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run generate && git diff --exit-code src/generated && npm run typecheck"
+    "verify": "pnpm run generate && git diff --exit-code src/generated && pnpm run typecheck"
+  },
+  "dependencies": {
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@redocly/cli": "^2.49.1",
     "orval": "^8.27.0",
-    "typescript": "^5.9.0",
-    "zod": "^4.5.4"
-  }
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  },
+  "packageManager": "pnpm@9.12.0"
 }

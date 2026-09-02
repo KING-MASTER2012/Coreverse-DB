@@ -13,10 +13,49 @@ import { defineConfig } from "orval";
 // swagger-parser (used internally by Orval) resolves the spec's external
 // $refs (paths/*.yaml, schemas/*.yaml) itself, directly against
 // openapi/openapi.yaml -- no separate bundle step needed here.
+//
+// Orval v8 disallows external $ref targets by default (a v7->v8 breaking
+// change, not something we did wrong) -- every file our multi-file spec
+// pulls in via $ref has to be allow-listed explicitly. This is every
+// paths/*.yaml and schemas/*.yaml file that exists today; add new ones
+// here when a future path/schema file is added to openapi/.
+const externalRefsAllow = [
+  "./paths/releases.yaml",
+  "./paths/teams.yaml",
+  "./paths/requests.yaml",
+  "./paths/profiles.yaml",
+  "./paths/projects.yaml",
+  "./paths/news.yaml",
+  "./paths/polls.yaml",
+  "./paths/discussions.yaml",
+  "./paths/docs.yaml",
+  "./schemas/Ok.yaml",
+  "./schemas/Release.yaml",
+  "./schemas/Artifact.yaml",
+  "./schemas/Profile.yaml",
+  "./schemas/Team.yaml",
+  "./schemas/TeamMember.yaml",
+  "./schemas/MembershipRequest.yaml",
+  "./schemas/Project.yaml",
+  "./schemas/News.yaml",
+  "./schemas/Poll.yaml",
+  "./schemas/PollResult.yaml",
+  "./schemas/Discussion.yaml",
+  "./schemas/DiscussionReply.yaml",
+  "./schemas/DocSource.yaml",
+  "./schemas/DocSearchResult.yaml",
+  "./schemas/Error.yaml",
+];
+
 export default defineConfig({
   coreverseDb: {
     input: {
       target: "./openapi/openapi.yaml",
+      parserOptions: {
+        externalRefs: {
+          allow: externalRefsAllow,
+        },
+      },
     },
     output: {
       mode: "tags-split",
@@ -38,6 +77,11 @@ export default defineConfig({
   coreverseDbZod: {
     input: {
       target: "./openapi/openapi.yaml",
+      parserOptions: {
+        externalRefs: {
+          allow: externalRefsAllow,
+        },
+      },
     },
     output: {
       mode: "tags-split",

@@ -9,7 +9,7 @@ info:
     directly.
   version: 0.1.0
 servers:
-  - url: https://<project-ref>.supabase.co/functions/v1
+  - url: https://wsbahvnrttaepnabnbqn.supabase.co/functions/v1
     description: Supabase Edge Functions (production)
   - url: http://127.0.0.1:54321/functions/v1
     description: Local development (supabase start)

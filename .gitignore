@@ -58,7 +58,7 @@ $RECYCLE.BIN/
 # Supabase local secrets / generated environment files
 supabase/.env
 supabase/.env.*
-
+supabase/.branches/
 
 # ============================================================
 # Logs
