@@ -7,12 +7,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type OfferOwnershipTransfer201Status = typeof OfferOwnershipTransfer201Status[keyof typeof OfferOwnershipTransfer201Status];
-
+export type OfferOwnershipTransfer201Status =
+  (typeof OfferOwnershipTransfer201Status)[keyof typeof OfferOwnershipTransfer201Status];
 
 export const OfferOwnershipTransfer201Status = {
-  pending: 'pending',
-  accepted: 'accepted',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
+  pending: "pending",
+  accepted: "accepted",
+  rejected: "rejected",
+  cancelled: "cancelled",
 } as const;

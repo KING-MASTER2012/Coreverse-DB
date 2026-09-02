@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ListTeamMembers200ItemRole = typeof ListTeamMembers200ItemRole[keyof typeof ListTeamMembers200ItemRole];
-
+export type ListTeamMembers200ItemRole =
+  (typeof ListTeamMembers200ItemRole)[keyof typeof ListTeamMembers200ItemRole];
 
 export const ListTeamMembers200ItemRole = {
-  owner: 'owner',
-  admin: 'admin',
-  member: 'member',
+  owner: "owner",
+  admin: "admin",
+  member: "member",
 } as const;

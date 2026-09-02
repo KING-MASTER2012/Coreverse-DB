@@ -7,11 +7,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ArtifactOs = typeof ArtifactOs[keyof typeof ArtifactOs];
-
+export type ArtifactOs = (typeof ArtifactOs)[keyof typeof ArtifactOs];
 
 export const ArtifactOs = {
-  windows: 'windows',
-  linux: 'linux',
-  macos: 'macos',
+  windows: "windows",
+  linux: "linux",
+  macos: "macos",
 } as const;

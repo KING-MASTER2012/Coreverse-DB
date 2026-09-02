@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type InviteToTeam201Type = typeof InviteToTeam201Type[keyof typeof InviteToTeam201Type];
-
+export type InviteToTeam201Type =
+  (typeof InviteToTeam201Type)[keyof typeof InviteToTeam201Type];
 
 export const InviteToTeam201Type = {
-  join_request: 'join_request',
-  invite: 'invite',
-  ownership_transfer: 'ownership_transfer',
+  join_request: "join_request",
+  invite: "invite",
+  ownership_transfer: "ownership_transfer",
 } as const;

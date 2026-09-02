@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { TeamMemberActionBodyAction } from './teamMemberActionBodyAction';
+import type { TeamMemberActionBodyAction } from "./teamMemberActionBodyAction";
 
 export type TeamMemberActionBody = {
   action: TeamMemberActionBodyAction;

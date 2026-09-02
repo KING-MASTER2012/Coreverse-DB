@@ -6,14 +6,14 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { SearchDocsKind } from './searchDocsKind';
+import type { SearchDocsKind } from "./searchDocsKind";
 
 export type SearchDocsParams = {
-q: string;
-kind?: SearchDocsKind;
-/**
- * @minimum 1
- * @maximum 50
- */
-limit?: number;
+  q: string;
+  kind?: SearchDocsKind;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
 };

@@ -6,76 +6,74 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * Anonymous and unrelated callers only see status=published. An authenticated caller who is the item's author or a platform moderator/admin also sees their own drafts (RLS: news_authenticated_read).
  * @summary List news (published only, unless moderator or author)
  */
 export const ListNewsQueryParams = zod.object({
-  "status": zod.enum(['draft', 'published']).optional()
-})
+  status: zod.enum(["draft", "published"]).optional(),
+});
 
 export const ListNewsResponseItem = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "slug": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid().optional(),
-  "status": zod.enum(['draft', 'published']),
-  "published_at": zod.iso.datetime({"offset":true}).nullish()
-})
-export const ListNewsResponse = zod.array(ListNewsResponseItem)
+  id: zod.uuid(),
+  title: zod.string(),
+  slug: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid().optional(),
+  status: zod.enum(["draft", "published"]),
+  published_at: zod.iso.datetime({ offset: true }).nullish(),
+});
+export const ListNewsResponse = zod.array(ListNewsResponseItem);
 
 /**
  * @summary Create a news item as a draft (moderator/admin only)
  */
 export const CreateNewsBody = zod.object({
-  "title": zod.string(),
-  "slug": zod.string(),
-  "body": zod.string()
-})
+  title: zod.string(),
+  slug: zod.string(),
+  body: zod.string(),
+});
 
 export const CreateNewsResponse = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "slug": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid().optional(),
-  "status": zod.enum(['draft', 'published']),
-  "published_at": zod.iso.datetime({"offset":true}).nullish()
-})
+  id: zod.uuid(),
+  title: zod.string(),
+  slug: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid().optional(),
+  status: zod.enum(["draft", "published"]),
+  published_at: zod.iso.datetime({ offset: true }).nullish(),
+});
 
 /**
  * @summary Update a news item, e.g. to publish it (moderator/admin only)
  */
 export const UpdateNewsParams = zod.object({
-  "newsId": zod.uuid()
-})
+  newsId: zod.uuid(),
+});
 
 export const UpdateNewsBody = zod.object({
-  "title": zod.string().optional(),
-  "body": zod.string().optional(),
-  "status": zod.enum(['draft', 'published']).optional()
-})
+  title: zod.string().optional(),
+  body: zod.string().optional(),
+  status: zod.enum(["draft", "published"]).optional(),
+});
 
 export const UpdateNewsResponse = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "slug": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid().optional(),
-  "status": zod.enum(['draft', 'published']),
-  "published_at": zod.iso.datetime({"offset":true}).nullish()
-})
+  id: zod.uuid(),
+  title: zod.string(),
+  slug: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid().optional(),
+  status: zod.enum(["draft", "published"]),
+  published_at: zod.iso.datetime({ offset: true }).nullish(),
+});
 
 /**
  * @summary Delete a news item (moderator/admin only)
  */
 export const DeleteNewsParams = zod.object({
-  "newsId": zod.uuid()
-})
+  newsId: zod.uuid(),
+});
 
-export const DeleteNewsResponse = zod.void()
-
+export const DeleteNewsResponse = zod.void();

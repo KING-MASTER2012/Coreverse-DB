@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { UpdateNewsBodyStatus } from './updateNewsBodyStatus';
+import type { UpdateNewsBodyStatus } from "./updateNewsBodyStatus";
 
 export type UpdateNewsBody = {
   title?: string;

@@ -6,74 +6,78 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * @summary List polls (with their options)
  */
 export const ListPollsResponseItem = zod.object({
-  "id": zod.uuid(),
-  "question": zod.string(),
-  "closes_at": zod.iso.datetime({"offset":true}).nullish(),
-  "options": zod.array(zod.object({
-  "id": zod.uuid(),
-  "label": zod.string(),
-  "display_order": zod.int().optional()
-}))
-})
-export const ListPollsResponse = zod.array(ListPollsResponseItem)
+  id: zod.uuid(),
+  question: zod.string(),
+  closes_at: zod.iso.datetime({ offset: true }).nullish(),
+  options: zod.array(
+    zod.object({
+      id: zod.uuid(),
+      label: zod.string(),
+      display_order: zod.int().optional(),
+    }),
+  ),
+});
+export const ListPollsResponse = zod.array(ListPollsResponseItem);
 
 /**
  * @summary Create a poll with its options (moderator/admin only)
  */
 export const createPollBodyOptionsMin = 2;
 
-
-
 export const CreatePollBody = zod.object({
-  "question": zod.string(),
-  "closes_at": zod.iso.datetime({"offset":true}).nullish(),
-  "options": zod.array(zod.string()).min(createPollBodyOptionsMin)
-})
+  question: zod.string(),
+  closes_at: zod.iso.datetime({ offset: true }).nullish(),
+  options: zod.array(zod.string()).min(createPollBodyOptionsMin),
+});
 
 export const CreatePollResponse = zod.object({
-  "id": zod.uuid(),
-  "question": zod.string(),
-  "closes_at": zod.iso.datetime({"offset":true}).nullish(),
-  "options": zod.array(zod.object({
-  "id": zod.uuid(),
-  "label": zod.string(),
-  "display_order": zod.int().optional()
-}))
-})
+  id: zod.uuid(),
+  question: zod.string(),
+  closes_at: zod.iso.datetime({ offset: true }).nullish(),
+  options: zod.array(
+    zod.object({
+      id: zod.uuid(),
+      label: zod.string(),
+      display_order: zod.int().optional(),
+    }),
+  ),
+});
 
 /**
  * @summary Cast a vote (one per poll per user; rejected if the poll is closed)
  */
 export const CastVoteParams = zod.object({
-  "pollId": zod.uuid()
-})
+  pollId: zod.uuid(),
+});
 
 export const CastVoteBody = zod.object({
-  "option_id": zod.uuid()
-})
+  option_id: zod.uuid(),
+});
 
-export const CastVoteResponse = zod.object({
-  "ok": zod.boolean()
-}).describe('Trivial acknowledgement body for actions that don\'t return a resource.')
+export const CastVoteResponse = zod
+  .object({
+    ok: zod.boolean(),
+  })
+  .describe(
+    "Trivial acknowledgement body for actions that don't return a resource.",
+  );
 
 /**
  * @summary Get aggregated (anonymous) results for a poll
  */
 export const GetPollResultsParams = zod.object({
-  "pollId": zod.uuid()
-})
+  pollId: zod.uuid(),
+});
 
 export const GetPollResultsResponseItem = zod.object({
-  "option_id": zod.uuid(),
-  "label": zod.string(),
-  "vote_count": zod.int()
-})
-export const GetPollResultsResponse = zod.array(GetPollResultsResponseItem)
-
+  option_id: zod.uuid(),
+  label: zod.string(),
+  vote_count: zod.int(),
+});
+export const GetPollResultsResponse = zod.array(GetPollResultsResponseItem);

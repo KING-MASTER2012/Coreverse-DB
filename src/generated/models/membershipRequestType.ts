@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type MembershipRequestType = typeof MembershipRequestType[keyof typeof MembershipRequestType];
-
+export type MembershipRequestType =
+  (typeof MembershipRequestType)[keyof typeof MembershipRequestType];
 
 export const MembershipRequestType = {
-  join_request: 'join_request',
-  invite: 'invite',
-  ownership_transfer: 'ownership_transfer',
+  join_request: "join_request",
+  invite: "invite",
+  ownership_transfer: "ownership_transfer",
 } as const;

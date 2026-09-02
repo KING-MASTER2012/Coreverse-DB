@@ -6,10 +6,10 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { GetReleaseByVersion200ArtifactsItemArchitecture } from './getReleaseByVersion200ArtifactsItemArchitecture';
-import type { GetReleaseByVersion200ArtifactsItemCompiler } from './getReleaseByVersion200ArtifactsItemCompiler';
-import type { GetReleaseByVersion200ArtifactsItemMinRequirements } from './getReleaseByVersion200ArtifactsItemMinRequirements';
-import type { GetReleaseByVersion200ArtifactsItemOs } from './getReleaseByVersion200ArtifactsItemOs';
+import type { GetReleaseByVersion200ArtifactsItemArchitecture } from "./getReleaseByVersion200ArtifactsItemArchitecture";
+import type { GetReleaseByVersion200ArtifactsItemCompiler } from "./getReleaseByVersion200ArtifactsItemCompiler";
+import type { GetReleaseByVersion200ArtifactsItemMinRequirements } from "./getReleaseByVersion200ArtifactsItemMinRequirements";
+import type { GetReleaseByVersion200ArtifactsItemOs } from "./getReleaseByVersion200ArtifactsItemOs";
 
 /**
  * A downloadable, per-OS/architecture build of a release. sha256 is used by the Launcher to verify binary integrity in case the distribution source is ever compromised.
@@ -19,9 +19,9 @@ export type GetReleaseByVersion200ArtifactsItem = {
   architecture: GetReleaseByVersion200ArtifactsItemArchitecture;
   download_url: string;
   /**
-     * Lowercase hex-encoded SHA-256 of the artifact file.
-     * @pattern ^[a-f0-9]{64}$
-     */
+   * Lowercase hex-encoded SHA-256 of the artifact file.
+   * @pattern ^[a-f0-9]{64}$
+   */
   sha256: string;
   size_bytes: number;
   /** Free-form (validated at the API layer, not by this schema alone). */

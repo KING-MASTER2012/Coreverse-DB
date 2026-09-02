@@ -6,8 +6,8 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { GetLatestReleaseStatus } from './getLatestReleaseStatus';
+import type { GetLatestReleaseStatus } from "./getLatestReleaseStatus";
 
 export type GetLatestReleaseParams = {
-status?: GetLatestReleaseStatus;
+  status?: GetLatestReleaseStatus;
 };

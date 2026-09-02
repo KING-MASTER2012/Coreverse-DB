@@ -7,12 +7,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type RequestToJoinTeam201Status = typeof RequestToJoinTeam201Status[keyof typeof RequestToJoinTeam201Status];
-
+export type RequestToJoinTeam201Status =
+  (typeof RequestToJoinTeam201Status)[keyof typeof RequestToJoinTeam201Status];
 
 export const RequestToJoinTeam201Status = {
-  pending: 'pending',
-  accepted: 'accepted',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
+  pending: "pending",
+  accepted: "accepted",
+  rejected: "rejected",
+  cancelled: "cancelled",
 } as const;

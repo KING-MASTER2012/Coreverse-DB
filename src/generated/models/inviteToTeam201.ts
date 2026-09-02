@@ -6,8 +6,8 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { InviteToTeam201Status } from './inviteToTeam201Status';
-import type { InviteToTeam201Type } from './inviteToTeam201Type';
+import type { InviteToTeam201Status } from "./inviteToTeam201Status";
+import type { InviteToTeam201Type } from "./inviteToTeam201Type";
 
 /**
  * A pending, accepted, rejected, or cancelled team membership action. type=join_request: user_id requested to join, an owner/admin decides. type=invite: an owner/admin invited user_id, who decides. type=ownership_transfer: the owner offered ownership to user_id, who decides.

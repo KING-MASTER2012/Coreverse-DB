@@ -8,5 +8,5 @@
  */
 
 export type ListProjectsParams = {
-team_id?: string;
+  team_id?: string;
 };

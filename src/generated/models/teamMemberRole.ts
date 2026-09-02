@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type TeamMemberRole = typeof TeamMemberRole[keyof typeof TeamMemberRole];
-
+export type TeamMemberRole =
+  (typeof TeamMemberRole)[keyof typeof TeamMemberRole];
 
 export const TeamMemberRole = {
-  owner: 'owner',
-  admin: 'admin',
-  member: 'member',
+  owner: "owner",
+  admin: "admin",
+  member: "member",
 } as const;

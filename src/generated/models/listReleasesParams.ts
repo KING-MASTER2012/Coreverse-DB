@@ -6,17 +6,17 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListReleasesStatus } from './listReleasesStatus';
+import type { ListReleasesStatus } from "./listReleasesStatus";
 
 export type ListReleasesParams = {
-status?: ListReleasesStatus;
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minimum 0
- */
-offset?: number;
+  status?: ListReleasesStatus;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
 };

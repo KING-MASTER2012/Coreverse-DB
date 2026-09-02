@@ -6,34 +6,51 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * @summary Get the caller's own profile
  */
 export const GetMyProfileResponse = zod.object({
-  "id": zod.uuid(),
-  "full_name": zod.string(),
-  "avatar_url": zod.url().nullish().describe('Public\/signed URL resolved from the stored avatar_path, not the raw path itself.')
-})
+  id: zod.uuid(),
+  full_name: zod.string(),
+  avatar_url: zod
+    .url()
+    .nullish()
+    .describe(
+      "Public\/signed URL resolved from the stored avatar_path, not the raw path itself.",
+    ),
+});
 
 /**
  * @summary Update the caller's own profile
  */
 export const updateMyProfileBodyFullNameMax = 100;
 
-
-
-
-export const UpdateMyProfileBody = zod.object({
-  "full_name": zod.string().min(1).max(updateMyProfileBodyFullNameMax).optional(),
-  "avatar_path": zod.string().min(1).nullish().describe('Storage path in the avatars bucket (client uploads the PNG directly to Storage first, then sends the path here).\n')
-}).describe('At least one of full_name or avatar_path must be provided.')
+export const UpdateMyProfileBody = zod
+  .object({
+    full_name: zod
+      .string()
+      .min(1)
+      .max(updateMyProfileBodyFullNameMax)
+      .optional(),
+    avatar_path: zod
+      .string()
+      .min(1)
+      .nullish()
+      .describe(
+        "Storage path in the avatars bucket (client uploads the PNG directly to Storage first, then sends the path here).\n",
+      ),
+  })
+  .describe("At least one of full_name or avatar_path must be provided.");
 
 export const UpdateMyProfileResponse = zod.object({
-  "id": zod.uuid(),
-  "full_name": zod.string(),
-  "avatar_url": zod.url().nullish().describe('Public\/signed URL resolved from the stored avatar_path, not the raw path itself.')
-})
-
+  id: zod.uuid(),
+  full_name: zod.string(),
+  avatar_url: zod
+    .url()
+    .nullish()
+    .describe(
+      "Public\/signed URL resolved from the stored avatar_path, not the raw path itself.",
+    ),
+});

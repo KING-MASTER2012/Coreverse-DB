@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type SearchDocsKind = typeof SearchDocsKind[keyof typeof SearchDocsKind];
-
+export type SearchDocsKind =
+  (typeof SearchDocsKind)[keyof typeof SearchDocsKind];
 
 export const SearchDocsKind = {
-  engine_mdbook: 'engine_mdbook',
-  tutorial: 'tutorial',
-  other: 'other',
+  engine_mdbook: "engine_mdbook",
+  tutorial: "tutorial",
+  other: "other",
 } as const;

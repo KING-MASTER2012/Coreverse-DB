@@ -22,184 +22,196 @@ import type {
   RejectMembershipRequest401,
   RejectMembershipRequest403,
   RejectMembershipRequest404,
-  RejectMembershipRequest409
-} from '../../models';
+  RejectMembershipRequest409,
+} from "../../models";
 
-import { coreverseFetch } from '../../../client/http';
+import { coreverseFetch } from "../../../client/http";
 
 export type acceptMembershipRequestResponse200 = {
-  data: AcceptMembershipRequest200
-  status: 200
-}
+  data: AcceptMembershipRequest200;
+  status: 200;
+};
 
 export type acceptMembershipRequestResponse400 = {
-  data: AcceptMembershipRequest400
-  status: 400
-}
+  data: AcceptMembershipRequest400;
+  status: 400;
+};
 
 export type acceptMembershipRequestResponse401 = {
-  data: AcceptMembershipRequest401
-  status: 401
-}
+  data: AcceptMembershipRequest401;
+  status: 401;
+};
 
 export type acceptMembershipRequestResponse403 = {
-  data: AcceptMembershipRequest403
-  status: 403
-}
+  data: AcceptMembershipRequest403;
+  status: 403;
+};
 
 export type acceptMembershipRequestResponse404 = {
-  data: AcceptMembershipRequest404
-  status: 404
-}
+  data: AcceptMembershipRequest404;
+  status: 404;
+};
 
 export type acceptMembershipRequestResponse409 = {
-  data: AcceptMembershipRequest409
-  status: 409
-}
-
-export type acceptMembershipRequestResponseSuccess = (acceptMembershipRequestResponse200) & {
-  headers: Headers;
-};
-export type acceptMembershipRequestResponseError = (acceptMembershipRequestResponse400 | acceptMembershipRequestResponse401 | acceptMembershipRequestResponse403 | acceptMembershipRequestResponse404 | acceptMembershipRequestResponse409) & {
-  headers: Headers;
+  data: AcceptMembershipRequest409;
+  status: 409;
 };
 
-export type acceptMembershipRequestResponse = (acceptMembershipRequestResponseSuccess | acceptMembershipRequestResponseError)
+export type acceptMembershipRequestResponseSuccess =
+  acceptMembershipRequestResponse200 & {
+    headers: Headers;
+  };
+export type acceptMembershipRequestResponseError = (
+  | acceptMembershipRequestResponse400
+  | acceptMembershipRequestResponse401
+  | acceptMembershipRequestResponse403
+  | acceptMembershipRequestResponse404
+  | acceptMembershipRequestResponse409
+) & {
+  headers: Headers;
+};
 
-export const getAcceptMembershipRequestUrl = (requestId: string,) => {
+export type acceptMembershipRequestResponse =
+  acceptMembershipRequestResponseSuccess | acceptMembershipRequestResponseError;
 
-
-
-
-  return `/requests/${requestId}/accept`
-}
+export const getAcceptMembershipRequestUrl = (requestId: string) => {
+  return `/requests/${requestId}/accept`;
+};
 
 /**
  * @summary Accept a pending membership request (join request or invite/ownership-transfer target)
  */
-export const acceptMembershipRequest = async (requestId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<acceptMembershipRequestResponse> => {
-
-  return coreverseFetch<acceptMembershipRequestResponse>(getAcceptMembershipRequestUrl(requestId),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
+export const acceptMembershipRequest = async (
+  requestId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<acceptMembershipRequestResponse> => {
+  return coreverseFetch<acceptMembershipRequestResponse>(
+    getAcceptMembershipRequestUrl(requestId),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
 
 export type rejectMembershipRequestResponse200 = {
-  data: RejectMembershipRequest200
-  status: 200
-}
+  data: RejectMembershipRequest200;
+  status: 200;
+};
 
 export type rejectMembershipRequestResponse400 = {
-  data: RejectMembershipRequest400
-  status: 400
-}
+  data: RejectMembershipRequest400;
+  status: 400;
+};
 
 export type rejectMembershipRequestResponse401 = {
-  data: RejectMembershipRequest401
-  status: 401
-}
+  data: RejectMembershipRequest401;
+  status: 401;
+};
 
 export type rejectMembershipRequestResponse403 = {
-  data: RejectMembershipRequest403
-  status: 403
-}
+  data: RejectMembershipRequest403;
+  status: 403;
+};
 
 export type rejectMembershipRequestResponse404 = {
-  data: RejectMembershipRequest404
-  status: 404
-}
+  data: RejectMembershipRequest404;
+  status: 404;
+};
 
 export type rejectMembershipRequestResponse409 = {
-  data: RejectMembershipRequest409
-  status: 409
-}
-
-export type rejectMembershipRequestResponseSuccess = (rejectMembershipRequestResponse200) & {
-  headers: Headers;
-};
-export type rejectMembershipRequestResponseError = (rejectMembershipRequestResponse400 | rejectMembershipRequestResponse401 | rejectMembershipRequestResponse403 | rejectMembershipRequestResponse404 | rejectMembershipRequestResponse409) & {
-  headers: Headers;
+  data: RejectMembershipRequest409;
+  status: 409;
 };
 
-export type rejectMembershipRequestResponse = (rejectMembershipRequestResponseSuccess | rejectMembershipRequestResponseError)
+export type rejectMembershipRequestResponseSuccess =
+  rejectMembershipRequestResponse200 & {
+    headers: Headers;
+  };
+export type rejectMembershipRequestResponseError = (
+  | rejectMembershipRequestResponse400
+  | rejectMembershipRequestResponse401
+  | rejectMembershipRequestResponse403
+  | rejectMembershipRequestResponse404
+  | rejectMembershipRequestResponse409
+) & {
+  headers: Headers;
+};
 
-export const getRejectMembershipRequestUrl = (requestId: string,) => {
+export type rejectMembershipRequestResponse =
+  rejectMembershipRequestResponseSuccess | rejectMembershipRequestResponseError;
 
-
-
-
-  return `/requests/${requestId}/reject`
-}
+export const getRejectMembershipRequestUrl = (requestId: string) => {
+  return `/requests/${requestId}/reject`;
+};
 
 /**
  * @summary Reject a pending membership request
  */
-export const rejectMembershipRequest = async (requestId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<rejectMembershipRequestResponse> => {
-
-  return coreverseFetch<rejectMembershipRequestResponse>(getRejectMembershipRequestUrl(requestId),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
+export const rejectMembershipRequest = async (
+  requestId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<rejectMembershipRequestResponse> => {
+  return coreverseFetch<rejectMembershipRequestResponse>(
+    getRejectMembershipRequestUrl(requestId),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
 
 export type cancelMembershipRequestResponse200 = {
-  data: CancelMembershipRequest200
-  status: 200
-}
+  data: CancelMembershipRequest200;
+  status: 200;
+};
 
 export type cancelMembershipRequestResponse400 = {
-  data: CancelMembershipRequest400
-  status: 400
-}
+  data: CancelMembershipRequest400;
+  status: 400;
+};
 
 export type cancelMembershipRequestResponse401 = {
-  data: CancelMembershipRequest401
-  status: 401
-}
+  data: CancelMembershipRequest401;
+  status: 401;
+};
 
 export type cancelMembershipRequestResponse403 = {
-  data: CancelMembershipRequest403
-  status: 403
-}
-
-export type cancelMembershipRequestResponseSuccess = (cancelMembershipRequestResponse200) & {
-  headers: Headers;
-};
-export type cancelMembershipRequestResponseError = (cancelMembershipRequestResponse400 | cancelMembershipRequestResponse401 | cancelMembershipRequestResponse403) & {
-  headers: Headers;
+  data: CancelMembershipRequest403;
+  status: 403;
 };
 
-export type cancelMembershipRequestResponse = (cancelMembershipRequestResponseSuccess | cancelMembershipRequestResponseError)
+export type cancelMembershipRequestResponseSuccess =
+  cancelMembershipRequestResponse200 & {
+    headers: Headers;
+  };
+export type cancelMembershipRequestResponseError = (
+  | cancelMembershipRequestResponse400
+  | cancelMembershipRequestResponse401
+  | cancelMembershipRequestResponse403
+) & {
+  headers: Headers;
+};
 
-export const getCancelMembershipRequestUrl = (requestId: string,) => {
+export type cancelMembershipRequestResponse =
+  cancelMembershipRequestResponseSuccess | cancelMembershipRequestResponseError;
 
-
-
-
-  return `/requests/${requestId}/cancel`
-}
+export const getCancelMembershipRequestUrl = (requestId: string) => {
+  return `/requests/${requestId}/cancel`;
+};
 
 /**
  * @summary Cancel a pending membership request (initiator only)
  */
-export const cancelMembershipRequest = async (requestId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<cancelMembershipRequestResponse> => {
-
-  return coreverseFetch<cancelMembershipRequestResponse>(getCancelMembershipRequestUrl(requestId),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
-
+export const cancelMembershipRequest = async (
+  requestId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<cancelMembershipRequestResponse> => {
+  return coreverseFetch<cancelMembershipRequestResponse>(
+    getCancelMembershipRequestUrl(requestId),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};

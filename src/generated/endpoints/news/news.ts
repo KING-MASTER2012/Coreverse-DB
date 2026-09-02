@@ -22,227 +22,231 @@ import type {
   UpdateNews400,
   UpdateNews403,
   UpdateNews404,
-  UpdateNewsBody
-} from '../../models';
+  UpdateNewsBody,
+} from "../../models";
 
-import { coreverseFetch } from '../../../client/http';
+import { coreverseFetch } from "../../../client/http";
 
 export type listNewsResponse200 = {
-  data: ListNews200Item[]
-  status: 200
-}
+  data: ListNews200Item[];
+  status: 200;
+};
 
 export type listNewsResponse400 = {
-  data: ListNews400
-  status: 400
-}
-
-export type listNewsResponseSuccess = (listNewsResponse200) & {
-  headers: Headers;
-};
-export type listNewsResponseError = (listNewsResponse400) & {
-  headers: Headers;
+  data: ListNews400;
+  status: 400;
 };
 
-export type listNewsResponse = (listNewsResponseSuccess | listNewsResponseError)
+export type listNewsResponseSuccess = listNewsResponse200 & {
+  headers: Headers;
+};
+export type listNewsResponseError = listNewsResponse400 & {
+  headers: Headers;
+};
 
-export const getListNewsUrl = (params?: ListNewsParams,) => {
+export type listNewsResponse = listNewsResponseSuccess | listNewsResponseError;
+
+export const getListNewsUrl = (params?: ListNewsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/news?${stringifiedParams}` : `/news`
-}
+  return stringifiedParams.length > 0 ? `/news?${stringifiedParams}` : `/news`;
+};
 
 /**
  * Anonymous and unrelated callers only see status=published. An authenticated caller who is the item's author or a platform moderator/admin also sees their own drafts (RLS: news_authenticated_read).
  * @summary List news (published only, unless moderator or author)
  */
-export const listNews = async (params?: ListNewsParams, options?: Parameters<typeof coreverseFetch>[1]): Promise<listNewsResponse> => {
-
-  return coreverseFetch<listNewsResponse>(getListNewsUrl(params),
-  {
+export const listNews = async (
+  params?: ListNewsParams,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<listNewsResponse> => {
+  return coreverseFetch<listNewsResponse>(getListNewsUrl(params), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
+    method: "GET",
+  });
+};
 
 export type createNewsResponse201 = {
-  data: CreateNews201
-  status: 201
-}
+  data: CreateNews201;
+  status: 201;
+};
 
 export type createNewsResponse400 = {
-  data: CreateNews400
-  status: 400
-}
+  data: CreateNews400;
+  status: 400;
+};
 
 export type createNewsResponse401 = {
-  data: CreateNews401
-  status: 401
-}
+  data: CreateNews401;
+  status: 401;
+};
 
 export type createNewsResponse403 = {
-  data: CreateNews403
-  status: 403
-}
+  data: CreateNews403;
+  status: 403;
+};
 
 export type createNewsResponse409 = {
-  data: CreateNews409
-  status: 409
-}
-
-export type createNewsResponseSuccess = (createNewsResponse201) & {
-  headers: Headers;
-};
-export type createNewsResponseError = (createNewsResponse400 | createNewsResponse401 | createNewsResponse403 | createNewsResponse409) & {
-  headers: Headers;
+  data: CreateNews409;
+  status: 409;
 };
 
-export type createNewsResponse = (createNewsResponseSuccess | createNewsResponseError)
+export type createNewsResponseSuccess = createNewsResponse201 & {
+  headers: Headers;
+};
+export type createNewsResponseError = (
+  | createNewsResponse400
+  | createNewsResponse401
+  | createNewsResponse403
+  | createNewsResponse409
+) & {
+  headers: Headers;
+};
+
+export type createNewsResponse =
+  createNewsResponseSuccess | createNewsResponseError;
 
 export const getCreateNewsUrl = () => {
-
-
-
-
-  return `/news`
-}
+  return `/news`;
+};
 
 /**
  * @summary Create a news item as a draft (moderator/admin only)
  */
-export const createNews = async (createNewsBody: CreateNewsBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<createNewsResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const createNews = async (
+  createNewsBody: CreateNewsBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<createNewsResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<createNewsResponse>(getCreateNewsUrl(),
-  {
+  return coreverseFetch<createNewsResponse>(getCreateNewsUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(createNewsBody)
-  }
-);}
-
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createNewsBody),
+  });
+};
 
 export type updateNewsResponse200 = {
-  data: UpdateNews200
-  status: 200
-}
+  data: UpdateNews200;
+  status: 200;
+};
 
 export type updateNewsResponse400 = {
-  data: UpdateNews400
-  status: 400
-}
+  data: UpdateNews400;
+  status: 400;
+};
 
 export type updateNewsResponse403 = {
-  data: UpdateNews403
-  status: 403
-}
+  data: UpdateNews403;
+  status: 403;
+};
 
 export type updateNewsResponse404 = {
-  data: UpdateNews404
-  status: 404
-}
-
-export type updateNewsResponseSuccess = (updateNewsResponse200) & {
-  headers: Headers;
-};
-export type updateNewsResponseError = (updateNewsResponse400 | updateNewsResponse403 | updateNewsResponse404) & {
-  headers: Headers;
+  data: UpdateNews404;
+  status: 404;
 };
 
-export type updateNewsResponse = (updateNewsResponseSuccess | updateNewsResponseError)
+export type updateNewsResponseSuccess = updateNewsResponse200 & {
+  headers: Headers;
+};
+export type updateNewsResponseError = (
+  updateNewsResponse400 | updateNewsResponse403 | updateNewsResponse404
+) & {
+  headers: Headers;
+};
 
-export const getUpdateNewsUrl = (newsId: string,) => {
+export type updateNewsResponse =
+  updateNewsResponseSuccess | updateNewsResponseError;
 
-
-
-
-  return `/news/${newsId}`
-}
+export const getUpdateNewsUrl = (newsId: string) => {
+  return `/news/${newsId}`;
+};
 
 /**
  * @summary Update a news item, e.g. to publish it (moderator/admin only)
  */
-export const updateNews = async (newsId: string,
-    updateNewsBody: UpdateNewsBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<updateNewsResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const updateNews = async (
+  newsId: string,
+  updateNewsBody: UpdateNewsBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<updateNewsResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<updateNewsResponse>(getUpdateNewsUrl(newsId),
-  {
+  return coreverseFetch<updateNewsResponse>(getUpdateNewsUrl(newsId), {
     ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(updateNewsBody)
-  }
-);}
-
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateNewsBody),
+  });
+};
 
 export type deleteNewsResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type deleteNewsResponse400 = {
-  data: DeleteNews400
-  status: 400
-}
+  data: DeleteNews400;
+  status: 400;
+};
 
 export type deleteNewsResponse404 = {
-  data: DeleteNews404
-  status: 404
-}
-
-export type deleteNewsResponseSuccess = (deleteNewsResponse204) & {
-  headers: Headers;
-};
-export type deleteNewsResponseError = (deleteNewsResponse400 | deleteNewsResponse404) & {
-  headers: Headers;
+  data: DeleteNews404;
+  status: 404;
 };
 
-export type deleteNewsResponse = (deleteNewsResponseSuccess | deleteNewsResponseError)
+export type deleteNewsResponseSuccess = deleteNewsResponse204 & {
+  headers: Headers;
+};
+export type deleteNewsResponseError = (
+  deleteNewsResponse400 | deleteNewsResponse404
+) & {
+  headers: Headers;
+};
 
-export const getDeleteNewsUrl = (newsId: string,) => {
+export type deleteNewsResponse =
+  deleteNewsResponseSuccess | deleteNewsResponseError;
 
-
-
-
-  return `/news/${newsId}`
-}
+export const getDeleteNewsUrl = (newsId: string) => {
+  return `/news/${newsId}`;
+};
 
 /**
  * @summary Delete a news item (moderator/admin only)
  */
-export const deleteNews = async (newsId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<deleteNewsResponse> => {
-
-  return coreverseFetch<deleteNewsResponse>(getDeleteNewsUrl(newsId),
-  {
+export const deleteNews = async (
+  newsId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<deleteNewsResponse> => {
+  return coreverseFetch<deleteNewsResponse>(getDeleteNewsUrl(newsId), {
     ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
+    method: "DELETE",
+  });
+};

@@ -10,4 +10,6 @@
 /**
  * Free-form (validated at the API layer, not by this schema alone).
  */
-export type ListReleases200ItemArtifactsItemMinRequirements = { [key: string]: unknown };
+export type ListReleases200ItemArtifactsItemMinRequirements = {
+  [key: string]: unknown;
+};

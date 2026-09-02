@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { TeamMemberRole } from './teamMemberRole';
+import type { TeamMemberRole } from "./teamMemberRole";
 
 export interface TeamMember {
   user_id: string;

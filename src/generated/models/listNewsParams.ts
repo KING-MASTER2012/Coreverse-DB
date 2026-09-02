@@ -6,8 +6,8 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListNewsStatus } from './listNewsStatus';
+import type { ListNewsStatus } from "./listNewsStatus";
 
 export type ListNewsParams = {
-status?: ListNewsStatus;
+  status?: ListNewsStatus;
 };

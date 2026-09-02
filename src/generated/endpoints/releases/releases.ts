@@ -15,153 +15,156 @@ import type {
   GetReleaseByVersion404,
   ListReleases200Item,
   ListReleases400,
-  ListReleasesParams
-} from '../../models';
+  ListReleasesParams,
+} from "../../models";
 
-import { coreverseFetch } from '../../../client/http';
+import { coreverseFetch } from "../../../client/http";
 
 export type listReleasesResponse200 = {
-  data: ListReleases200Item[]
-  status: 200
-}
+  data: ListReleases200Item[];
+  status: 200;
+};
 
 export type listReleasesResponse400 = {
-  data: ListReleases400
-  status: 400
-}
-
-export type listReleasesResponseSuccess = (listReleasesResponse200) & {
-  headers: Headers;
-};
-export type listReleasesResponseError = (listReleasesResponse400) & {
-  headers: Headers;
+  data: ListReleases400;
+  status: 400;
 };
 
-export type listReleasesResponse = (listReleasesResponseSuccess | listReleasesResponseError)
+export type listReleasesResponseSuccess = listReleasesResponse200 & {
+  headers: Headers;
+};
+export type listReleasesResponseError = listReleasesResponse400 & {
+  headers: Headers;
+};
 
-export const getListReleasesUrl = (params?: ListReleasesParams,) => {
+export type listReleasesResponse =
+  listReleasesResponseSuccess | listReleasesResponseError;
+
+export const getListReleasesUrl = (params?: ListReleasesParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/releases?${stringifiedParams}` : `/releases`
-}
+  return stringifiedParams.length > 0
+    ? `/releases?${stringifiedParams}`
+    : `/releases`;
+};
 
 /**
  * @summary List engine releases
  */
-export const listReleases = async (params?: ListReleasesParams, options?: Parameters<typeof coreverseFetch>[1]): Promise<listReleasesResponse> => {
-
-  return coreverseFetch<listReleasesResponse>(getListReleasesUrl(params),
-  {
+export const listReleases = async (
+  params?: ListReleasesParams,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<listReleasesResponse> => {
+  return coreverseFetch<listReleasesResponse>(getListReleasesUrl(params), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
+    method: "GET",
+  });
+};
 
 export type getLatestReleaseResponse200 = {
-  data: GetLatestRelease200
-  status: 200
-}
+  data: GetLatestRelease200;
+  status: 200;
+};
 
 export type getLatestReleaseResponse404 = {
-  data: GetLatestRelease404
-  status: 404
-}
-
-export type getLatestReleaseResponseSuccess = (getLatestReleaseResponse200) & {
-  headers: Headers;
-};
-export type getLatestReleaseResponseError = (getLatestReleaseResponse404) & {
-  headers: Headers;
+  data: GetLatestRelease404;
+  status: 404;
 };
 
-export type getLatestReleaseResponse = (getLatestReleaseResponseSuccess | getLatestReleaseResponseError)
+export type getLatestReleaseResponseSuccess = getLatestReleaseResponse200 & {
+  headers: Headers;
+};
+export type getLatestReleaseResponseError = getLatestReleaseResponse404 & {
+  headers: Headers;
+};
 
-export const getGetLatestReleaseUrl = (params?: GetLatestReleaseParams,) => {
+export type getLatestReleaseResponse =
+  getLatestReleaseResponseSuccess | getLatestReleaseResponseError;
+
+export const getGetLatestReleaseUrl = (params?: GetLatestReleaseParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/releases/latest?${stringifiedParams}` : `/releases/latest`
-}
+  return stringifiedParams.length > 0
+    ? `/releases/latest?${stringifiedParams}`
+    : `/releases/latest`;
+};
 
 /**
  * @summary Get the latest release for a status channel
  */
-export const getLatestRelease = async (params?: GetLatestReleaseParams, options?: Parameters<typeof coreverseFetch>[1]): Promise<getLatestReleaseResponse> => {
-
-  return coreverseFetch<getLatestReleaseResponse>(getGetLatestReleaseUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
+export const getLatestRelease = async (
+  params?: GetLatestReleaseParams,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<getLatestReleaseResponse> => {
+  return coreverseFetch<getLatestReleaseResponse>(
+    getGetLatestReleaseUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
 
 export type getReleaseByVersionResponse200 = {
-  data: GetReleaseByVersion200
-  status: 200
-}
+  data: GetReleaseByVersion200;
+  status: 200;
+};
 
 export type getReleaseByVersionResponse400 = {
-  data: GetReleaseByVersion400
-  status: 400
-}
+  data: GetReleaseByVersion400;
+  status: 400;
+};
 
 export type getReleaseByVersionResponse404 = {
-  data: GetReleaseByVersion404
-  status: 404
-}
-
-export type getReleaseByVersionResponseSuccess = (getReleaseByVersionResponse200) & {
-  headers: Headers;
-};
-export type getReleaseByVersionResponseError = (getReleaseByVersionResponse400 | getReleaseByVersionResponse404) & {
-  headers: Headers;
+  data: GetReleaseByVersion404;
+  status: 404;
 };
 
-export type getReleaseByVersionResponse = (getReleaseByVersionResponseSuccess | getReleaseByVersionResponseError)
+export type getReleaseByVersionResponseSuccess =
+  getReleaseByVersionResponse200 & {
+    headers: Headers;
+  };
+export type getReleaseByVersionResponseError = (
+  getReleaseByVersionResponse400 | getReleaseByVersionResponse404
+) & {
+  headers: Headers;
+};
 
-export const getGetReleaseByVersionUrl = (version: string,) => {
+export type getReleaseByVersionResponse =
+  getReleaseByVersionResponseSuccess | getReleaseByVersionResponseError;
 
-
-
-
-  return `/releases/${version}`
-}
+export const getGetReleaseByVersionUrl = (version: string) => {
+  return `/releases/${version}`;
+};
 
 /**
  * @summary Get a release by exact version
  */
-export const getReleaseByVersion = async (version: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<getReleaseByVersionResponse> => {
-
-  return coreverseFetch<getReleaseByVersionResponse>(getGetReleaseByVersionUrl(version),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
+export const getReleaseByVersion = async (
+  version: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<getReleaseByVersionResponse> => {
+  return coreverseFetch<getReleaseByVersionResponse>(
+    getGetReleaseByVersionUrl(version),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};

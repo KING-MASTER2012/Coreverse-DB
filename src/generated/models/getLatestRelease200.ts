@@ -6,8 +6,8 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { GetLatestRelease200ArtifactsItem } from './getLatestRelease200ArtifactsItem';
-import type { GetLatestRelease200Status } from './getLatestRelease200Status';
+import type { GetLatestRelease200ArtifactsItem } from "./getLatestRelease200ArtifactsItem";
+import type { GetLatestRelease200Status } from "./getLatestRelease200Status";
 
 /**
  * Coreverse Engine release metadata. Contains no binaries -- see artifacts[] for per-OS/architecture downloads.

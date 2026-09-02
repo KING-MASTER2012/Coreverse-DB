@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { PollOptionsItem } from './pollOptionsItem';
+import type { PollOptionsItem } from "./pollOptionsItem";
 
 export interface Poll {
   id: string;

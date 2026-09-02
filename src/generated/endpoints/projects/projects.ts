@@ -22,259 +22,264 @@ import type {
   UpdateProject200,
   UpdateProject400,
   UpdateProject404,
-  UpdateProjectBody
-} from '../../models';
+  UpdateProjectBody,
+} from "../../models";
 
-import { coreverseFetch } from '../../../client/http';
+import { coreverseFetch } from "../../../client/http";
 
 export type listProjectsResponse200 = {
-  data: ListProjects200Item[]
-  status: 200
-}
+  data: ListProjects200Item[];
+  status: 200;
+};
 
 export type listProjectsResponse400 = {
-  data: ListProjects400
-  status: 400
-}
-
-export type listProjectsResponseSuccess = (listProjectsResponse200) & {
-  headers: Headers;
-};
-export type listProjectsResponseError = (listProjectsResponse400) & {
-  headers: Headers;
+  data: ListProjects400;
+  status: 400;
 };
 
-export type listProjectsResponse = (listProjectsResponseSuccess | listProjectsResponseError)
+export type listProjectsResponseSuccess = listProjectsResponse200 & {
+  headers: Headers;
+};
+export type listProjectsResponseError = listProjectsResponse400 & {
+  headers: Headers;
+};
 
-export const getListProjectsUrl = (params?: ListProjectsParams,) => {
+export type listProjectsResponse =
+  listProjectsResponseSuccess | listProjectsResponseError;
+
+export const getListProjectsUrl = (params?: ListProjectsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/projects?${stringifiedParams}` : `/projects`
-}
+  return stringifiedParams.length > 0
+    ? `/projects?${stringifiedParams}`
+    : `/projects`;
+};
 
 /**
  * @summary List projects visible to the caller (owned, or via team membership)
  */
-export const listProjects = async (params?: ListProjectsParams, options?: Parameters<typeof coreverseFetch>[1]): Promise<listProjectsResponse> => {
-
-  return coreverseFetch<listProjectsResponse>(getListProjectsUrl(params),
-  {
+export const listProjects = async (
+  params?: ListProjectsParams,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<listProjectsResponse> => {
+  return coreverseFetch<listProjectsResponse>(getListProjectsUrl(params), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
+    method: "GET",
+  });
+};
 
 export type createProjectResponse201 = {
-  data: CreateProject201
-  status: 201
-}
+  data: CreateProject201;
+  status: 201;
+};
 
 export type createProjectResponse400 = {
-  data: CreateProject400
-  status: 400
-}
+  data: CreateProject400;
+  status: 400;
+};
 
 export type createProjectResponse401 = {
-  data: CreateProject401
-  status: 401
-}
-
-export type createProjectResponseSuccess = (createProjectResponse201) & {
-  headers: Headers;
-};
-export type createProjectResponseError = (createProjectResponse400 | createProjectResponse401) & {
-  headers: Headers;
+  data: CreateProject401;
+  status: 401;
 };
 
-export type createProjectResponse = (createProjectResponseSuccess | createProjectResponseError)
+export type createProjectResponseSuccess = createProjectResponse201 & {
+  headers: Headers;
+};
+export type createProjectResponseError = (
+  createProjectResponse400 | createProjectResponse401
+) & {
+  headers: Headers;
+};
+
+export type createProjectResponse =
+  createProjectResponseSuccess | createProjectResponseError;
 
 export const getCreateProjectUrl = () => {
-
-
-
-
-  return `/projects`
-}
+  return `/projects`;
+};
 
 /**
  * @summary Register a project (archive already uploaded to Storage)
  */
-export const createProject = async (createProjectBody: CreateProjectBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<createProjectResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const createProject = async (
+  createProjectBody: CreateProjectBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<createProjectResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<createProjectResponse>(getCreateProjectUrl(),
-  {
+  return coreverseFetch<createProjectResponse>(getCreateProjectUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(createProjectBody)
-  }
-);}
-
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createProjectBody),
+  });
+};
 
 export type updateProjectResponse200 = {
-  data: UpdateProject200
-  status: 200
-}
+  data: UpdateProject200;
+  status: 200;
+};
 
 export type updateProjectResponse400 = {
-  data: UpdateProject400
-  status: 400
-}
+  data: UpdateProject400;
+  status: 400;
+};
 
 export type updateProjectResponse404 = {
-  data: UpdateProject404
-  status: 404
-}
-
-export type updateProjectResponseSuccess = (updateProjectResponse200) & {
-  headers: Headers;
-};
-export type updateProjectResponseError = (updateProjectResponse400 | updateProjectResponse404) & {
-  headers: Headers;
+  data: UpdateProject404;
+  status: 404;
 };
 
-export type updateProjectResponse = (updateProjectResponseSuccess | updateProjectResponseError)
+export type updateProjectResponseSuccess = updateProjectResponse200 & {
+  headers: Headers;
+};
+export type updateProjectResponseError = (
+  updateProjectResponse400 | updateProjectResponse404
+) & {
+  headers: Headers;
+};
 
-export const getUpdateProjectUrl = (projectId: string,) => {
+export type updateProjectResponse =
+  updateProjectResponseSuccess | updateProjectResponseError;
 
-
-
-
-  return `/projects/${projectId}`
-}
+export const getUpdateProjectUrl = (projectId: string) => {
+  return `/projects/${projectId}`;
+};
 
 /**
  * @summary Update a project (owner only)
  */
-export const updateProject = async (projectId: string,
-    updateProjectBody: UpdateProjectBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<updateProjectResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const updateProject = async (
+  projectId: string,
+  updateProjectBody: UpdateProjectBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<updateProjectResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<updateProjectResponse>(getUpdateProjectUrl(projectId),
-  {
+  return coreverseFetch<updateProjectResponse>(getUpdateProjectUrl(projectId), {
     ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(updateProjectBody)
-  }
-);}
-
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateProjectBody),
+  });
+};
 
 export type deleteProjectResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type deleteProjectResponse400 = {
-  data: DeleteProject400
-  status: 400
-}
+  data: DeleteProject400;
+  status: 400;
+};
 
 export type deleteProjectResponse404 = {
-  data: DeleteProject404
-  status: 404
-}
-
-export type deleteProjectResponseSuccess = (deleteProjectResponse204) & {
-  headers: Headers;
-};
-export type deleteProjectResponseError = (deleteProjectResponse400 | deleteProjectResponse404) & {
-  headers: Headers;
+  data: DeleteProject404;
+  status: 404;
 };
 
-export type deleteProjectResponse = (deleteProjectResponseSuccess | deleteProjectResponseError)
+export type deleteProjectResponseSuccess = deleteProjectResponse204 & {
+  headers: Headers;
+};
+export type deleteProjectResponseError = (
+  deleteProjectResponse400 | deleteProjectResponse404
+) & {
+  headers: Headers;
+};
 
-export const getDeleteProjectUrl = (projectId: string,) => {
+export type deleteProjectResponse =
+  deleteProjectResponseSuccess | deleteProjectResponseError;
 
-
-
-
-  return `/projects/${projectId}`
-}
+export const getDeleteProjectUrl = (projectId: string) => {
+  return `/projects/${projectId}`;
+};
 
 /**
  * @summary Delete a project (owner only)
  */
-export const deleteProject = async (projectId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<deleteProjectResponse> => {
-
-  return coreverseFetch<deleteProjectResponse>(getDeleteProjectUrl(projectId),
-  {
+export const deleteProject = async (
+  projectId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<deleteProjectResponse> => {
+  return coreverseFetch<deleteProjectResponse>(getDeleteProjectUrl(projectId), {
     ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
+    method: "DELETE",
+  });
+};
 
 export type getProjectDownloadUrlResponse200 = {
-  data: GetProjectDownloadUrl200
-  status: 200
-}
+  data: GetProjectDownloadUrl200;
+  status: 200;
+};
 
 export type getProjectDownloadUrlResponse400 = {
-  data: GetProjectDownloadUrl400
-  status: 400
-}
+  data: GetProjectDownloadUrl400;
+  status: 400;
+};
 
 export type getProjectDownloadUrlResponse404 = {
-  data: GetProjectDownloadUrl404
-  status: 404
-}
-
-export type getProjectDownloadUrlResponseSuccess = (getProjectDownloadUrlResponse200) & {
-  headers: Headers;
-};
-export type getProjectDownloadUrlResponseError = (getProjectDownloadUrlResponse400 | getProjectDownloadUrlResponse404) & {
-  headers: Headers;
+  data: GetProjectDownloadUrl404;
+  status: 404;
 };
 
-export type getProjectDownloadUrlResponse = (getProjectDownloadUrlResponseSuccess | getProjectDownloadUrlResponseError)
+export type getProjectDownloadUrlResponseSuccess =
+  getProjectDownloadUrlResponse200 & {
+    headers: Headers;
+  };
+export type getProjectDownloadUrlResponseError = (
+  getProjectDownloadUrlResponse400 | getProjectDownloadUrlResponse404
+) & {
+  headers: Headers;
+};
 
-export const getGetProjectDownloadUrlUrl = (projectId: string,) => {
+export type getProjectDownloadUrlResponse =
+  getProjectDownloadUrlResponseSuccess | getProjectDownloadUrlResponseError;
 
-
-
-
-  return `/projects/${projectId}/download`
-}
+export const getGetProjectDownloadUrlUrl = (projectId: string) => {
+  return `/projects/${projectId}/download`;
+};
 
 /**
  * project-archives is a private bucket -- URLs are minted on request (5 minute TTL) rather than being included in the regular project representation, since access requires checking identity.projects visibility (owner or team member) first.
  * @summary Get a short-lived signed download URL for the project archive
  */
-export const getProjectDownloadUrl = async (projectId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<getProjectDownloadUrlResponse> => {
-
-  return coreverseFetch<getProjectDownloadUrlResponse>(getGetProjectDownloadUrlUrl(projectId),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
+export const getProjectDownloadUrl = async (
+  projectId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<getProjectDownloadUrlResponse> => {
+  return coreverseFetch<getProjectDownloadUrlResponse>(
+    getGetProjectDownloadUrlUrl(projectId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};

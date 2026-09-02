@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ReindexDocsBodySourceKind } from './reindexDocsBodySourceKind';
+import type { ReindexDocsBodySourceKind } from "./reindexDocsBodySourceKind";
 
 export type ReindexDocsBodySource = {
   kind: ReindexDocsBodySourceKind;

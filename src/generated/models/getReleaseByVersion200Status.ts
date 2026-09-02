@@ -7,12 +7,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetReleaseByVersion200Status = typeof GetReleaseByVersion200Status[keyof typeof GetReleaseByVersion200Status];
-
+export type GetReleaseByVersion200Status =
+  (typeof GetReleaseByVersion200Status)[keyof typeof GetReleaseByVersion200Status];
 
 export const GetReleaseByVersion200Status = {
-  stable: 'stable',
-  beta: 'beta',
-  rc: 'rc',
-  deprecated: 'deprecated',
+  stable: "stable",
+  beta: "beta",
+  rc: "rc",
+  deprecated: "deprecated",
 } as const;

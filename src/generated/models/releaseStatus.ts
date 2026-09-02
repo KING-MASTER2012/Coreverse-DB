@@ -7,12 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ReleaseStatus = typeof ReleaseStatus[keyof typeof ReleaseStatus];
-
+export type ReleaseStatus = (typeof ReleaseStatus)[keyof typeof ReleaseStatus];
 
 export const ReleaseStatus = {
-  stable: 'stable',
-  beta: 'beta',
-  rc: 'rc',
-  deprecated: 'deprecated',
+  stable: "stable",
+  beta: "beta",
+  rc: "rc",
+  deprecated: "deprecated",
 } as const;

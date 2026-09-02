@@ -12,13 +12,13 @@
  */
 export type UpdateMyProfileBody = {
   /**
-     * @minLength 1
-     * @maxLength 100
-     */
+   * @minLength 1
+   * @maxLength 100
+   */
   full_name?: string;
   /**
-     * Storage path in the avatars bucket (client uploads the PNG directly to Storage first, then sends the path here).
-     * @minLength 1
-     */
+   * Storage path in the avatars bucket (client uploads the PNG directly to Storage first, then sends the path here).
+   * @minLength 1
+   */
   avatar_path?: string | null;
 };

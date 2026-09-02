@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { CreatePoll201OptionsItem } from './createPoll201OptionsItem';
+import type { CreatePoll201OptionsItem } from "./createPoll201OptionsItem";
 
 export type CreatePoll201 = {
   id: string;

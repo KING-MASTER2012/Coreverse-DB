@@ -7,19 +7,23 @@ settings:
 importers:
 
   .:
+    dependencies:
+      zod:
+        specifier: ^4.5.4
+        version: 4.5.4
     devDependencies:
       '@redocly/cli':
         specifier: ^2.49.1
         version: 2.50.0
       orval:
         specifier: ^8.27.0
-        version: 8.27.0(typescript@7.0.2)
+        version: 8.27.0(prettier@3.9.6)(typescript@7.0.2)
+      prettier:
+        specifier: ^3.9.6
+        version: 3.9.6
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
-      zod:
-        specifier: ^4.5.4
-        version: 4.5.4
 
 packages:
 
@@ -641,6 +645,11 @@ packages:
   picomatch@4.0.7:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
+
+  prettier@3.9.6:
+    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   pretty-ms@9.3.1:
     resolution: {integrity: sha512-HzMy3Geq23nVALD/M2LliU+F+M+gVNsvkQWWqeBZ8HDiCgzo6YPJ/Omrmtq24EFrIsk0a3EkQGEd7bDOo+IhGA==}
@@ -1271,7 +1280,7 @@ snapshots:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
 
-  orval@8.27.0(typescript@7.0.2):
+  orval@8.27.0(prettier@3.9.6)(typescript@7.0.2):
     dependencies:
       '@commander-js/extra-typings': 15.0.0(commander@15.0.0)
       '@orval/angular': 8.27.0(typescript@7.0.2)
@@ -1302,6 +1311,8 @@ snapshots:
       typedoc: 0.28.20(typescript@7.0.2)
       typedoc-plugin-coverage: 4.0.3(typedoc@0.28.20(typescript@7.0.2))
       typedoc-plugin-markdown: 4.13.0(typedoc@0.28.20(typescript@7.0.2))
+    optionalDependencies:
+      prettier: 3.9.6
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
@@ -1324,6 +1335,8 @@ snapshots:
   pathe@2.0.3: {}
 
   picomatch@4.0.7: {}
+
+  prettier@3.9.6: {}
 
   pretty-ms@9.3.1:
     dependencies:

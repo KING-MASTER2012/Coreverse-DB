@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListNews200ItemStatus } from './listNews200ItemStatus';
+import type { ListNews200ItemStatus } from "./listNews200ItemStatus";
 
 export type ListNews200Item = {
   id: string;

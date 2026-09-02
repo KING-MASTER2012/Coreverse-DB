@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListTeamMembers200ItemRole } from './listTeamMembers200ItemRole';
+import type { ListTeamMembers200ItemRole } from "./listTeamMembers200ItemRole";
 
 export type ListTeamMembers200Item = {
   user_id: string;

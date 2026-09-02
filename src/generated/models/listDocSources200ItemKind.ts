@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ListDocSources200ItemKind = typeof ListDocSources200ItemKind[keyof typeof ListDocSources200ItemKind];
-
+export type ListDocSources200ItemKind =
+  (typeof ListDocSources200ItemKind)[keyof typeof ListDocSources200ItemKind];
 
 export const ListDocSources200ItemKind = {
-  engine_mdbook: 'engine_mdbook',
-  tutorial: 'tutorial',
-  other: 'other',
+  engine_mdbook: "engine_mdbook",
+  tutorial: "tutorial",
+  other: "other",
 } as const;

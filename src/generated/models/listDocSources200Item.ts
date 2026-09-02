@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListDocSources200ItemKind } from './listDocSources200ItemKind';
+import type { ListDocSources200ItemKind } from "./listDocSources200ItemKind";
 
 export type ListDocSources200Item = {
   id: string;

@@ -6,8 +6,8 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ReindexDocsBodyPagesItem } from './reindexDocsBodyPagesItem';
-import type { ReindexDocsBodySource } from './reindexDocsBodySource';
+import type { ReindexDocsBodyPagesItem } from "./reindexDocsBodyPagesItem";
+import type { ReindexDocsBodySource } from "./reindexDocsBodySource";
 
 export type ReindexDocsBody = {
   source: ReindexDocsBodySource;

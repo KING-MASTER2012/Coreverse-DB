@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type TeamMemberActionBodyAction = typeof TeamMemberActionBodyAction[keyof typeof TeamMemberActionBodyAction];
-
+export type TeamMemberActionBodyAction =
+  (typeof TeamMemberActionBodyAction)[keyof typeof TeamMemberActionBodyAction];
 
 export const TeamMemberActionBodyAction = {
-  promote: 'promote',
-  demote: 'demote',
-  remove: 'remove',
+  promote: "promote",
+  demote: "demote",
+  remove: "remove",
 } as const;

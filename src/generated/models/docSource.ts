@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { DocSourceKind } from './docSourceKind';
+import type { DocSourceKind } from "./docSourceKind";
 
 export interface DocSource {
   id: string;

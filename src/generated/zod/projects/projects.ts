@@ -6,102 +6,104 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * @summary List projects visible to the caller (owned, or via team membership)
  */
 export const ListProjectsQueryParams = zod.object({
-  "team_id": zod.uuid().optional()
-})
+  team_id: zod.uuid().optional(),
+});
 
-export const listProjectsResponseArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
-
+export const listProjectsResponseArchiveSha256RegExp = new RegExp(
+  "^[a-f0-9]{64}$",
+);
 
 export const ListProjectsResponseItem = zod.object({
-  "id": zod.uuid(),
-  "owner_id": zod.uuid(),
-  "team_id": zod.uuid().nullish(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "archive_size_bytes": zod.int(),
-  "archive_sha256": zod.string().regex(listProjectsResponseArchiveSha256RegExp)
-})
-export const ListProjectsResponse = zod.array(ListProjectsResponseItem)
+  id: zod.uuid(),
+  owner_id: zod.uuid(),
+  team_id: zod.uuid().nullish(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  archive_size_bytes: zod.int(),
+  archive_sha256: zod.string().regex(listProjectsResponseArchiveSha256RegExp),
+});
+export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
 
 /**
  * @summary Register a project (archive already uploaded to Storage)
  */
-export const createProjectBodyArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
-
+export const createProjectBodyArchiveSha256RegExp = new RegExp(
+  "^[a-f0-9]{64}$",
+);
 
 export const CreateProjectBody = zod.object({
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "team_id": zod.uuid().nullish(),
-  "archive_path": zod.string(),
-  "archive_size_bytes": zod.int(),
-  "archive_sha256": zod.string().regex(createProjectBodyArchiveSha256RegExp)
-})
+  name: zod.string(),
+  description: zod.string().nullish(),
+  team_id: zod.uuid().nullish(),
+  archive_path: zod.string(),
+  archive_size_bytes: zod.int(),
+  archive_sha256: zod.string().regex(createProjectBodyArchiveSha256RegExp),
+});
 
-export const createProjectResponseArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
-
+export const createProjectResponseArchiveSha256RegExp = new RegExp(
+  "^[a-f0-9]{64}$",
+);
 
 export const CreateProjectResponse = zod.object({
-  "id": zod.uuid(),
-  "owner_id": zod.uuid(),
-  "team_id": zod.uuid().nullish(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "archive_size_bytes": zod.int(),
-  "archive_sha256": zod.string().regex(createProjectResponseArchiveSha256RegExp)
-})
+  id: zod.uuid(),
+  owner_id: zod.uuid(),
+  team_id: zod.uuid().nullish(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  archive_size_bytes: zod.int(),
+  archive_sha256: zod.string().regex(createProjectResponseArchiveSha256RegExp),
+});
 
 /**
  * @summary Update a project (owner only)
  */
 export const UpdateProjectParams = zod.object({
-  "projectId": zod.uuid()
-})
+  projectId: zod.uuid(),
+});
 
 export const UpdateProjectBody = zod.object({
-  "name": zod.string().optional(),
-  "description": zod.string().nullish()
-})
+  name: zod.string().optional(),
+  description: zod.string().nullish(),
+});
 
-export const updateProjectResponseArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
-
+export const updateProjectResponseArchiveSha256RegExp = new RegExp(
+  "^[a-f0-9]{64}$",
+);
 
 export const UpdateProjectResponse = zod.object({
-  "id": zod.uuid(),
-  "owner_id": zod.uuid(),
-  "team_id": zod.uuid().nullish(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "archive_size_bytes": zod.int(),
-  "archive_sha256": zod.string().regex(updateProjectResponseArchiveSha256RegExp)
-})
+  id: zod.uuid(),
+  owner_id: zod.uuid(),
+  team_id: zod.uuid().nullish(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  archive_size_bytes: zod.int(),
+  archive_sha256: zod.string().regex(updateProjectResponseArchiveSha256RegExp),
+});
 
 /**
  * @summary Delete a project (owner only)
  */
 export const DeleteProjectParams = zod.object({
-  "projectId": zod.uuid()
-})
+  projectId: zod.uuid(),
+});
 
-export const DeleteProjectResponse = zod.void()
+export const DeleteProjectResponse = zod.void();
 
 /**
  * project-archives is a private bucket -- URLs are minted on request (5 minute TTL) rather than being included in the regular project representation, since access requires checking identity.projects visibility (owner or team member) first.
  * @summary Get a short-lived signed download URL for the project archive
  */
 export const GetProjectDownloadUrlParams = zod.object({
-  "projectId": zod.uuid()
-})
+  projectId: zod.uuid(),
+});
 
 export const GetProjectDownloadUrlResponse = zod.object({
-  "url": zod.url(),
-  "expires_in": zod.int().describe('Seconds until the URL expires.')
-})
-
+  url: zod.url(),
+  expires_in: zod.int().describe("Seconds until the URL expires."),
+});

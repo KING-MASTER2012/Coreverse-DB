@@ -6,39 +6,49 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * @summary Accept a pending membership request (join request or invite/ownership-transfer target)
  */
 export const AcceptMembershipRequestParams = zod.object({
-  "requestId": zod.uuid()
-})
+  requestId: zod.uuid(),
+});
 
-export const AcceptMembershipRequestResponse = zod.object({
-  "ok": zod.boolean()
-}).describe('Trivial acknowledgement body for actions that don\'t return a resource.')
+export const AcceptMembershipRequestResponse = zod
+  .object({
+    ok: zod.boolean(),
+  })
+  .describe(
+    "Trivial acknowledgement body for actions that don't return a resource.",
+  );
 
 /**
  * @summary Reject a pending membership request
  */
 export const RejectMembershipRequestParams = zod.object({
-  "requestId": zod.uuid()
-})
+  requestId: zod.uuid(),
+});
 
-export const RejectMembershipRequestResponse = zod.object({
-  "ok": zod.boolean()
-}).describe('Trivial acknowledgement body for actions that don\'t return a resource.')
+export const RejectMembershipRequestResponse = zod
+  .object({
+    ok: zod.boolean(),
+  })
+  .describe(
+    "Trivial acknowledgement body for actions that don't return a resource.",
+  );
 
 /**
  * @summary Cancel a pending membership request (initiator only)
  */
 export const CancelMembershipRequestParams = zod.object({
-  "requestId": zod.uuid()
-})
+  requestId: zod.uuid(),
+});
 
-export const CancelMembershipRequestResponse = zod.object({
-  "ok": zod.boolean()
-}).describe('Trivial acknowledgement body for actions that don\'t return a resource.')
-
+export const CancelMembershipRequestResponse = zod
+  .object({
+    ok: zod.boolean(),
+  })
+  .describe(
+    "Trivial acknowledgement body for actions that don't return a resource.",
+  );

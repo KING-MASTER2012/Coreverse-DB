@@ -18,197 +18,189 @@ import type {
   CreatePollBody,
   GetPollResults200Item,
   GetPollResults400,
-  ListPolls200Item
-} from '../../models';
+  ListPolls200Item,
+} from "../../models";
 
-import { coreverseFetch } from '../../../client/http';
+import { coreverseFetch } from "../../../client/http";
 
 export type listPollsResponse200 = {
-  data: ListPolls200Item[]
-  status: 200
-}
+  data: ListPolls200Item[];
+  status: 200;
+};
 
-export type listPollsResponseSuccess = (listPollsResponse200) & {
+export type listPollsResponseSuccess = listPollsResponse200 & {
   headers: Headers;
 };
-;
-
-export type listPollsResponse = (listPollsResponseSuccess)
+export type listPollsResponse = listPollsResponseSuccess;
 
 export const getListPollsUrl = () => {
-
-
-
-
-  return `/polls`
-}
+  return `/polls`;
+};
 
 /**
  * @summary List polls (with their options)
  */
-export const listPolls = async ( options?: Parameters<typeof coreverseFetch>[1]): Promise<listPollsResponse> => {
-
-  return coreverseFetch<listPollsResponse>(getListPollsUrl(),
-  {
+export const listPolls = async (
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<listPollsResponse> => {
+  return coreverseFetch<listPollsResponse>(getListPollsUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
+    method: "GET",
+  });
+};
 
 export type createPollResponse201 = {
-  data: CreatePoll201
-  status: 201
-}
+  data: CreatePoll201;
+  status: 201;
+};
 
 export type createPollResponse400 = {
-  data: CreatePoll400
-  status: 400
-}
+  data: CreatePoll400;
+  status: 400;
+};
 
 export type createPollResponse403 = {
-  data: CreatePoll403
-  status: 403
-}
-
-export type createPollResponseSuccess = (createPollResponse201) & {
-  headers: Headers;
-};
-export type createPollResponseError = (createPollResponse400 | createPollResponse403) & {
-  headers: Headers;
+  data: CreatePoll403;
+  status: 403;
 };
 
-export type createPollResponse = (createPollResponseSuccess | createPollResponseError)
+export type createPollResponseSuccess = createPollResponse201 & {
+  headers: Headers;
+};
+export type createPollResponseError = (
+  createPollResponse400 | createPollResponse403
+) & {
+  headers: Headers;
+};
+
+export type createPollResponse =
+  createPollResponseSuccess | createPollResponseError;
 
 export const getCreatePollUrl = () => {
-
-
-
-
-  return `/polls`
-}
+  return `/polls`;
+};
 
 /**
  * @summary Create a poll with its options (moderator/admin only)
  */
-export const createPoll = async (createPollBody: CreatePollBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<createPollResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const createPoll = async (
+  createPollBody: CreatePollBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<createPollResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<createPollResponse>(getCreatePollUrl(),
-  {
+  return coreverseFetch<createPollResponse>(getCreatePollUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(createPollBody)
-  }
-);}
-
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createPollBody),
+  });
+};
 
 export type castVoteResponse201 = {
-  data: CastVote201
-  status: 201
-}
+  data: CastVote201;
+  status: 201;
+};
 
 export type castVoteResponse400 = {
-  data: CastVote400
-  status: 400
-}
+  data: CastVote400;
+  status: 400;
+};
 
 export type castVoteResponse401 = {
-  data: CastVote401
-  status: 401
-}
+  data: CastVote401;
+  status: 401;
+};
 
 export type castVoteResponse409 = {
-  data: CastVote409
-  status: 409
-}
-
-export type castVoteResponseSuccess = (castVoteResponse201) & {
-  headers: Headers;
-};
-export type castVoteResponseError = (castVoteResponse400 | castVoteResponse401 | castVoteResponse409) & {
-  headers: Headers;
+  data: CastVote409;
+  status: 409;
 };
 
-export type castVoteResponse = (castVoteResponseSuccess | castVoteResponseError)
+export type castVoteResponseSuccess = castVoteResponse201 & {
+  headers: Headers;
+};
+export type castVoteResponseError = (
+  castVoteResponse400 | castVoteResponse401 | castVoteResponse409
+) & {
+  headers: Headers;
+};
 
-export const getCastVoteUrl = (pollId: string,) => {
+export type castVoteResponse = castVoteResponseSuccess | castVoteResponseError;
 
-
-
-
-  return `/polls/${pollId}/vote`
-}
+export const getCastVoteUrl = (pollId: string) => {
+  return `/polls/${pollId}/vote`;
+};
 
 /**
  * @summary Cast a vote (one per poll per user; rejected if the poll is closed)
  */
-export const castVote = async (pollId: string,
-    castVoteBody: CastVoteBody, options?: Parameters<typeof coreverseFetch>[1]): Promise<castVoteResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const castVote = async (
+  pollId: string,
+  castVoteBody: CastVoteBody,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<castVoteResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return coreverseFetch<castVoteResponse>(getCastVoteUrl(pollId),
-  {
+  return coreverseFetch<castVoteResponse>(getCastVoteUrl(pollId), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(castVoteBody)
-  }
-);}
-
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(castVoteBody),
+  });
+};
 
 export type getPollResultsResponse200 = {
-  data: GetPollResults200Item[]
-  status: 200
-}
+  data: GetPollResults200Item[];
+  status: 200;
+};
 
 export type getPollResultsResponse400 = {
-  data: GetPollResults400
-  status: 400
-}
-
-export type getPollResultsResponseSuccess = (getPollResultsResponse200) & {
-  headers: Headers;
-};
-export type getPollResultsResponseError = (getPollResultsResponse400) & {
-  headers: Headers;
+  data: GetPollResults400;
+  status: 400;
 };
 
-export type getPollResultsResponse = (getPollResultsResponseSuccess | getPollResultsResponseError)
+export type getPollResultsResponseSuccess = getPollResultsResponse200 & {
+  headers: Headers;
+};
+export type getPollResultsResponseError = getPollResultsResponse400 & {
+  headers: Headers;
+};
 
-export const getGetPollResultsUrl = (pollId: string,) => {
+export type getPollResultsResponse =
+  getPollResultsResponseSuccess | getPollResultsResponseError;
 
-
-
-
-  return `/polls/${pollId}/results`
-}
+export const getGetPollResultsUrl = (pollId: string) => {
+  return `/polls/${pollId}/results`;
+};
 
 /**
  * @summary Get aggregated (anonymous) results for a poll
  */
-export const getPollResults = async (pollId: string, options?: Parameters<typeof coreverseFetch>[1]): Promise<getPollResultsResponse> => {
-
-  return coreverseFetch<getPollResultsResponse>(getGetPollResultsUrl(pollId),
-  {
+export const getPollResults = async (
+  pollId: string,
+  options?: Parameters<typeof coreverseFetch>[1],
+): Promise<getPollResultsResponse> => {
+  return coreverseFetch<getPollResultsResponse>(getGetPollResultsUrl(pollId), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
+    method: "GET",
+  });
+};

@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { ListPolls200ItemOptionsItem } from './listPolls200ItemOptionsItem';
+import type { ListPolls200ItemOptionsItem } from "./listPolls200ItemOptionsItem";
 
 export type ListPolls200Item = {
   id: string;

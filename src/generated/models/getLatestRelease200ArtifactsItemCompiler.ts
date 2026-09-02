@@ -10,4 +10,6 @@
 /**
  * Free-form (validated at the API layer, not by this schema alone).
  */
-export type GetLatestRelease200ArtifactsItemCompiler = { [key: string]: unknown };
+export type GetLatestRelease200ArtifactsItemCompiler = {
+  [key: string]: unknown;
+};

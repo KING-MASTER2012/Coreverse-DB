@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetLatestRelease200ArtifactsItemOs = typeof GetLatestRelease200ArtifactsItemOs[keyof typeof GetLatestRelease200ArtifactsItemOs];
-
+export type GetLatestRelease200ArtifactsItemOs =
+  (typeof GetLatestRelease200ArtifactsItemOs)[keyof typeof GetLatestRelease200ArtifactsItemOs];
 
 export const GetLatestRelease200ArtifactsItemOs = {
-  windows: 'windows',
-  linux: 'linux',
-  macos: 'macos',
+  windows: "windows",
+  linux: "linux",
+  macos: "macos",
 } as const;

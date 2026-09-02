@@ -6,7 +6,7 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import type { CreateNews201Status } from './createNews201Status';
+import type { CreateNews201Status } from "./createNews201Status";
 
 export type CreateNews201 = {
   id: string;

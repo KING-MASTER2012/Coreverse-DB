@@ -7,12 +7,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type MembershipRequestStatus = typeof MembershipRequestStatus[keyof typeof MembershipRequestStatus];
-
+export type MembershipRequestStatus =
+  (typeof MembershipRequestStatus)[keyof typeof MembershipRequestStatus];
 
 export const MembershipRequestStatus = {
-  pending: 'pending',
-  accepted: 'accepted',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
+  pending: "pending",
+  accepted: "accepted",
+  rejected: "rejected",
+  cancelled: "cancelled",
 } as const;

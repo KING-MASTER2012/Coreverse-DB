@@ -7,11 +7,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type DocSourceKind = typeof DocSourceKind[keyof typeof DocSourceKind];
-
+export type DocSourceKind = (typeof DocSourceKind)[keyof typeof DocSourceKind];
 
 export const DocSourceKind = {
-  engine_mdbook: 'engine_mdbook',
-  tutorial: 'tutorial',
-  other: 'other',
+  engine_mdbook: "engine_mdbook",
+  tutorial: "tutorial",
+  other: "other",
 } as const;

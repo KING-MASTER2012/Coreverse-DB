@@ -6,133 +6,148 @@
  *
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * @summary List discussions
  */
 export const ListDiscussionsQueryParams = zod.object({
-  "category": zod.string().optional()
-})
+  category: zod.string().optional(),
+});
 
 export const ListDiscussionsResponseItem = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid(),
-  "category": zod.string().nullish(),
-  "is_locked": zod.boolean(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
-export const ListDiscussionsResponse = zod.array(ListDiscussionsResponseItem)
+  id: zod.uuid(),
+  title: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid(),
+  category: zod.string().nullish(),
+  is_locked: zod.boolean(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});
+export const ListDiscussionsResponse = zod.array(ListDiscussionsResponseItem);
 
 /**
  * @summary Start a discussion
  */
 export const CreateDiscussionBody = zod.object({
-  "title": zod.string(),
-  "body": zod.string(),
-  "category": zod.string().nullish()
-})
+  title: zod.string(),
+  body: zod.string(),
+  category: zod.string().nullish(),
+});
 
 export const CreateDiscussionResponse = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid(),
-  "category": zod.string().nullish(),
-  "is_locked": zod.boolean(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
+  id: zod.uuid(),
+  title: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid(),
+  category: zod.string().nullish(),
+  is_locked: zod.boolean(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});
 
 /**
  * @summary Update or lock/unlock a discussion (author while unlocked, or moderator)
  */
 export const UpdateDiscussionParams = zod.object({
-  "discussionId": zod.uuid()
-})
+  discussionId: zod.uuid(),
+});
 
 export const UpdateDiscussionBody = zod.object({
-  "title": zod.string().optional(),
-  "body": zod.string().optional(),
-  "is_locked": zod.boolean().optional()
-})
+  title: zod.string().optional(),
+  body: zod.string().optional(),
+  is_locked: zod.boolean().optional(),
+});
 
 export const UpdateDiscussionResponse = zod.object({
-  "id": zod.uuid(),
-  "title": zod.string(),
-  "body": zod.string().optional(),
-  "author_id": zod.uuid(),
-  "category": zod.string().nullish(),
-  "is_locked": zod.boolean(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
+  id: zod.uuid(),
+  title: zod.string(),
+  body: zod.string().optional(),
+  author_id: zod.uuid(),
+  category: zod.string().nullish(),
+  is_locked: zod.boolean(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});
 
 /**
  * @summary Delete a discussion (author or moderator)
  */
 export const DeleteDiscussionParams = zod.object({
-  "discussionId": zod.uuid()
-})
+  discussionId: zod.uuid(),
+});
 
-export const DeleteDiscussionResponse = zod.void()
+export const DeleteDiscussionResponse = zod.void();
 
 /**
  * @summary List a discussion's replies
  */
 export const ListDiscussionRepliesParams = zod.object({
-  "discussionId": zod.uuid()
-})
+  discussionId: zod.uuid(),
+});
 
 export const ListDiscussionRepliesResponseItem = zod.object({
-  "id": zod.uuid(),
-  "discussion_id": zod.uuid(),
-  "author_id": zod.uuid(),
-  "body": zod.string().nullish().describe('null\/omitted when deleted_at is set -- render as \"[deleted]\".'),
-  "deleted_at": zod.iso.datetime({"offset":true}).nullish(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
-export const ListDiscussionRepliesResponse = zod.array(ListDiscussionRepliesResponseItem)
+  id: zod.uuid(),
+  discussion_id: zod.uuid(),
+  author_id: zod.uuid(),
+  body: zod
+    .string()
+    .nullish()
+    .describe(
+      'null\/omitted when deleted_at is set -- render as \"[deleted]\".',
+    ),
+  deleted_at: zod.iso.datetime({ offset: true }).nullish(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});
+export const ListDiscussionRepliesResponse = zod.array(
+  ListDiscussionRepliesResponseItem,
+);
 
 /**
  * @summary Reply to a discussion (rejected if the discussion is locked)
  */
 export const ReplyToDiscussionParams = zod.object({
-  "discussionId": zod.uuid()
-})
+  discussionId: zod.uuid(),
+});
 
 export const ReplyToDiscussionBody = zod.object({
-  "body": zod.string()
-})
+  body: zod.string(),
+});
 
 export const ReplyToDiscussionResponse = zod.object({
-  "id": zod.uuid(),
-  "discussion_id": zod.uuid(),
-  "author_id": zod.uuid(),
-  "body": zod.string().nullish().describe('null\/omitted when deleted_at is set -- render as \"[deleted]\".'),
-  "deleted_at": zod.iso.datetime({"offset":true}).nullish(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
+  id: zod.uuid(),
+  discussion_id: zod.uuid(),
+  author_id: zod.uuid(),
+  body: zod
+    .string()
+    .nullish()
+    .describe(
+      'null\/omitted when deleted_at is set -- render as \"[deleted]\".',
+    ),
+  deleted_at: zod.iso.datetime({ offset: true }).nullish(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});
 
 /**
  * @summary Edit or soft-delete a reply (author or moderator)
  */
 export const UpdateDiscussionReplyParams = zod.object({
-  "replyId": zod.uuid()
-})
+  replyId: zod.uuid(),
+});
 
 export const UpdateDiscussionReplyBody = zod.object({
-  "body": zod.string().optional(),
-  "deleted": zod.boolean().optional().describe('Set true to soft-delete.')
-})
+  body: zod.string().optional(),
+  deleted: zod.boolean().optional().describe("Set true to soft-delete."),
+});
 
 export const UpdateDiscussionReplyResponse = zod.object({
-  "id": zod.uuid(),
-  "discussion_id": zod.uuid(),
-  "author_id": zod.uuid(),
-  "body": zod.string().nullish().describe('null\/omitted when deleted_at is set -- render as \"[deleted]\".'),
-  "deleted_at": zod.iso.datetime({"offset":true}).nullish(),
-  "created_at": zod.iso.datetime({"offset":true}).optional()
-})
-
+  id: zod.uuid(),
+  discussion_id: zod.uuid(),
+  author_id: zod.uuid(),
+  body: zod
+    .string()
+    .nullish()
+    .describe(
+      'null\/omitted when deleted_at is set -- render as \"[deleted]\".',
+    ),
+  deleted_at: zod.iso.datetime({ offset: true }).nullish(),
+  created_at: zod.iso.datetime({ offset: true }).optional(),
+});

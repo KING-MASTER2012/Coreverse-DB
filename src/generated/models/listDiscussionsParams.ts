@@ -8,5 +8,5 @@
  */
 
 export type ListDiscussionsParams = {
-category?: string;
+  category?: string;
 };

@@ -7,10 +7,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type UpdateNews200Status = typeof UpdateNews200Status[keyof typeof UpdateNews200Status];
-
+export type UpdateNews200Status =
+  (typeof UpdateNews200Status)[keyof typeof UpdateNews200Status];
 
 export const UpdateNews200Status = {
-  draft: 'draft',
-  published: 'published',
+  draft: "draft",
+  published: "published",
 } as const;

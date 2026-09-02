@@ -7,11 +7,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type OfferOwnershipTransfer201Type = typeof OfferOwnershipTransfer201Type[keyof typeof OfferOwnershipTransfer201Type];
-
+export type OfferOwnershipTransfer201Type =
+  (typeof OfferOwnershipTransfer201Type)[keyof typeof OfferOwnershipTransfer201Type];
 
 export const OfferOwnershipTransfer201Type = {
-  join_request: 'join_request',
-  invite: 'invite',
-  ownership_transfer: 'ownership_transfer',
+  join_request: "join_request",
+  invite: "invite",
+  ownership_transfer: "ownership_transfer",
 } as const;

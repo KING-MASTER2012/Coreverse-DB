@@ -7,10 +7,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetReleaseByVersion200ArtifactsItemArchitecture = typeof GetReleaseByVersion200ArtifactsItemArchitecture[keyof typeof GetReleaseByVersion200ArtifactsItemArchitecture];
-
+export type GetReleaseByVersion200ArtifactsItemArchitecture =
+  (typeof GetReleaseByVersion200ArtifactsItemArchitecture)[keyof typeof GetReleaseByVersion200ArtifactsItemArchitecture];
 
 export const GetReleaseByVersion200ArtifactsItemArchitecture = {
-  x86_64: 'x86_64',
-  arm64: 'arm64',
+  x86_64: "x86_64",
+  arm64: "arm64",
 } as const;
