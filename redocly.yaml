@@ -1,0 +1,26 @@
+extends:
+  - recommended
+
+apis:
+  coreverse-db:
+    root: ./openapi/openapi.yaml
+
+rules:
+  # Coreverse DB intentionally retains nullable:true for tooling compatibility.
+  # OAS 3.1 itself uses JSON Schema null types instead.
+  struct: off
+
+  # Keep as design guidance rather than a hard CI failure.
+  operation-4xx-response: warn
+
+  # Preserve strict API-quality checks.
+  no-unresolved-refs: error
+  no-ambiguous-paths: error
+  operation-operationId: error
+  operation-operationId-unique: error
+  operation-operationId-url-safe: error
+  operation-summary: error
+  operation-2xx-response: error
+  path-parameters-defined: error
+  security-defined: error
+  spec-ref-siblings: error

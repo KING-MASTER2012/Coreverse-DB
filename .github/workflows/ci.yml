@@ -16,12 +16,13 @@ env:
 
 jobs:
   # ---------------------------------------------------------------------
-  # openapi/ is the contract. Lint it on its own so a broken spec fails
-  # fast, before we even try to generate a client from it.
+  # openapi/ is the API contract. Lint it independently so a broken
+  # contract fails fast, before client generation is attempted.
   # ---------------------------------------------------------------------
   openapi-lint:
     name: Lint OpenAPI contract
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -34,26 +35,42 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Enforce OpenAPI 3.1 (Orval compatibility)
+      - name: Verify OpenAPI version
+        shell: bash
         run: |
-          # Spec dosyasındaki sürüm CI'da 3.2.x gelirse, Orval desteklemediği için 3.1.0'a çekiyoruz.
-          sed -i 's/^openapi: 3\.2.*/openapi: 3.1.0/' openapi/openapi.yaml
+          set -euo pipefail
+
+          expected="3.1.0"
+          actual="$(sed -n 's/^openapi:[[:space:]]*//p' openapi/openapi.yaml | head -n 1)"
+
+          if [[ "$actual" != "$expected" ]]; then
+            echo "ERROR: openapi/openapi.yaml must declare OpenAPI $expected."
+            echo "Found: ${actual:-<missing>}"
+            exit 1
+          fi
+
+          echo "OpenAPI version: $actual"
 
       - name: Redocly lint
         run: pnpm exec redocly lint openapi/openapi.yaml
 
   # ---------------------------------------------------------------------
-  # The generated client (src/generated/**) must always match what Orval
-  # would produce from the current openapi/**. `pnpm run verify` runs
-  # generate -> git diff --exit-code -> typecheck, so a PR that edits the
-  # spec without regenerating (or hand-edits generated/**) fails here.
+  # The generated client must always match what Orval would produce from
+  # the current openapi/** contract.
+  #
+  # `pnpm run verify` is expected to:
+  #   1. generate the client
+  #   2. fail on git diff
+  #   3. run TypeScript typechecking
   # ---------------------------------------------------------------------
   client-verify:
     name: Verify generated client (no drift) + typecheck
     runs-on: ubuntu-latest
     needs: openapi-lint
+
     steps:
       - uses: actions/checkout@v4
 
@@ -66,27 +83,42 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Enforce OpenAPI 3.1 (Orval compatibility)
+      - name: Verify OpenAPI version
+        shell: bash
         run: |
-          # Orval (pnpm run verify) çalışmadan hemen önce de sürümün 3.1.0 olduğundan emin oluyoruz.
-          sed -i 's/^openapi: 3\.2.*/openapi: 3.1.0/' openapi/openapi.yaml
+          set -euo pipefail
 
-      - name: pnpm run verify (generate, drift check, typecheck)
+          expected="3.1.0"
+          actual="$(sed -n 's/^openapi:[[:space:]]*//p' openapi/openapi.yaml | head -n 1)"
+
+          if [[ "$actual" != "$expected" ]]; then
+            echo "ERROR: openapi/openapi.yaml must declare OpenAPI $expected."
+            echo "Found: ${actual:-<missing>}"
+            exit 1
+          fi
+
+          echo "OpenAPI version: $actual"
+
+      - name: Verify generated client
         run: pnpm run verify
 
-      - name: Show diff on failure
+      - name: Show generated client diff on failure
         if: failure()
-        run: git diff src/generated | head -c 20000
+        shell: bash
+        run: |
+          git diff -- src/generated | head -c 20000
 
   # ---------------------------------------------------------------------
-  # Edge Function schemas.ts <-> schemas.test.ts (pure Zod unit tests,
-  # no Supabase client / network dependency beyond what deno.json grants).
+  # Pure Deno unit tests for Edge Function Zod schemas.
+  # No Supabase/Postgres dependency.
   # ---------------------------------------------------------------------
   deno-unit:
     name: Deno unit tests (Zod schemas)
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -94,21 +126,22 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: deno task test
+      - name: Run Deno tests
         run: deno task test
 
-      - name: deno fmt --check
+      - name: Check Deno formatting
         run: deno fmt --check supabase/functions/
 
   # ---------------------------------------------------------------------
-  # pgTAP: spins up a local Supabase (Docker) stack, applies
-  # supabase/migrations/**, and runs supabase/tests/{database,rls}/**.
-  # This is intentionally a separate job from deno-unit: pgTAP tests the
-  # database itself and needs a running Postgres, the Zod tests don't.
+  # pgTAP tests run against a real local Supabase/PostgreSQL stack.
+  #
+  # This is deliberately separate from deno-unit because pgTAP tests
+  # the database itself and requires Docker + Postgres.
   # ---------------------------------------------------------------------
   supabase-pgtap:
     name: Supabase pgTAP tests
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -116,13 +149,13 @@ jobs:
         with:
           version: latest
 
-      - name: Start local Supabase (applies migrations)
+      - name: Start local Supabase
         run: supabase start
 
       - name: Lint database schema
         run: supabase db lint
 
-      - name: Run pgTAP tests (supabase/tests/**)
+      - name: Run pgTAP tests
         run: supabase test db
 
       - name: Stop local Supabase
@@ -130,18 +163,26 @@ jobs:
         run: supabase stop
 
   # ---------------------------------------------------------------------
-  # Single required status check to point branch protection at.
+  # Single required status check for branch protection.
   # ---------------------------------------------------------------------
   ci-required:
     name: CI required checks
     if: always()
     runs-on: ubuntu-latest
-    needs: [openapi-lint, client-verify, deno-unit, supabase-pgtap]
+    needs:
+      - openapi-lint
+      - client-verify
+      - deno-unit
+      - supabase-pgtap
+
     steps:
-      - name: Fail if any dependency failed
+      - name: Fail if any dependency failed or was cancelled
+        shell: bash
         run: |
-          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ] || \
-             [ "${{ contains(needs.*.result, 'cancelled') }}" = "true" ]; then
-            echo "One or more required jobs failed." >&2
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]] || \
+             [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "One or more required jobs failed or were cancelled." >&2
             exit 1
           fi
+
+          echo "All required CI jobs passed."
