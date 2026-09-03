@@ -80,12 +80,12 @@ create trigger trg_docs_pages_updated_at
 alter table docs.sources enable row level security;
 alter table docs.pages enable row level security;
 
-create policy "docs_sources_public_read"
+create policy docs_sources_public_read
   on docs.sources for select
   to anon, authenticated
   using (true);
 
-create policy "docs_pages_public_read"
+create policy docs_pages_public_read
   on docs.pages for select
   to anon, authenticated
   using (true);

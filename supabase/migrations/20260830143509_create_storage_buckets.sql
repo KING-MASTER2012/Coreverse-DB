@@ -24,23 +24,23 @@ on conflict (id) do nothing;
 -- avatars: public read, self-only write, flat {user_id}.png naming
 -- ---------------------------------------------------------------------
 
-create policy "avatars_public_read"
+create policy avatars_public_read
   on storage.objects for select
   to anon, authenticated
   using (bucket_id = 'avatars');
 
-create policy "avatars_self_write"
+create policy avatars_self_write
   on storage.objects for insert
   to authenticated
   with check (bucket_id = 'avatars' and name = auth.uid()::text || '.png');
 
-create policy "avatars_self_update"
+create policy avatars_self_update
   on storage.objects for update
   to authenticated
   using (bucket_id = 'avatars' and name = auth.uid()::text || '.png')
   with check (bucket_id = 'avatars' and name = auth.uid()::text || '.png');
 
-create policy "avatars_self_delete"
+create policy avatars_self_delete
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'avatars' and name = auth.uid()::text || '.png');
@@ -51,7 +51,7 @@ create policy "avatars_self_delete"
 -- projects edge function, not direct Storage access -- see note above).
 -- ---------------------------------------------------------------------
 
-create policy "project_archives_owner_read"
+create policy project_archives_owner_read
   on storage.objects for select
   to authenticated
   using (
@@ -59,7 +59,7 @@ create policy "project_archives_owner_read"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
-create policy "project_archives_owner_write"
+create policy project_archives_owner_write
   on storage.objects for insert
   to authenticated
   with check (
@@ -67,7 +67,7 @@ create policy "project_archives_owner_write"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
-create policy "project_archives_owner_update"
+create policy project_archives_owner_update
   on storage.objects for update
   to authenticated
   using (
@@ -79,7 +79,7 @@ create policy "project_archives_owner_update"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
-create policy "project_archives_owner_delete"
+create policy project_archives_owner_delete
   on storage.objects for delete
   to authenticated
   using (

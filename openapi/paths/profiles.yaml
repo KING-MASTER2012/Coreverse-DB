@@ -45,7 +45,7 @@ me:
               avatar_path:
                 type: string
                 minLength: 1
-                nullable: true
+                type: ["string", "null"]
                 description: >
                   Storage path in the avatars bucket (client uploads the
                   PNG directly to Storage first, then sends the path

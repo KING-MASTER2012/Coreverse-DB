@@ -28,7 +28,7 @@ list:
             required: [question, options]
             properties:
               question: { type: string }
-              closes_at: { type: string, format: date-time, nullable: true }
+              closes_at: { type: string, format: date-time, type: ["string", "null"] }
               options:
                 type: array
                 minItems: 2

@@ -34,7 +34,7 @@ list:
             properties:
               title: { type: string }
               body: { type: string }
-              category: { type: string, nullable: true }
+              category: { type: string, type: ["string", "null"] }
     responses:
       '201':
         description: Created discussion.

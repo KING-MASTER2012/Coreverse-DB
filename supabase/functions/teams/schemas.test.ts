@@ -22,7 +22,7 @@ Deno.test('RenameTeamSchema rejects a name over 100 chars', () => {
 
 Deno.test('InviteSchema requires a valid uuid user_id', () => {
   assertFalse(InviteSchema.safeParse({ user_id: 'not-a-uuid', },).success,);
-  assert(InviteSchema.safeParse({ user_id: '11111111-1111-1111-1111-111111111111', },).success,);
+  assert(InviteSchema.safeParse({ user_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', },).success,);
 });
 
 Deno.test('OwnershipTransferSchema requires a valid uuid user_id', () => {

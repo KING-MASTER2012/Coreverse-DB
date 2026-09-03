@@ -11,5 +11,5 @@ properties:
   avatar_url:
     type: string
     format: uri
-    nullable: true
+    type: ["string", "null"]
     description: Public/signed URL resolved from the stored avatar_path, not the raw path itself.

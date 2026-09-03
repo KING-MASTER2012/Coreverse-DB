@@ -88,13 +88,13 @@ execute function releases.set_updated_at();
 alter table releases.engine_releases enable row level security;
 alter table releases.engine_artifacts enable row level security;
 
-create policy "engine_releases_public_read"
+create policy engine_releases_public_read
   on releases.engine_releases
   for select
   to anon, authenticated
   using (true);
 
-create policy "engine_artifacts_public_read"
+create policy engine_artifacts_public_read
   on releases.engine_artifacts
   for select
   to anon, authenticated

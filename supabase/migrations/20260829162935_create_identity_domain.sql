@@ -308,7 +308,7 @@ alter table identity.projects enable row level security;
 -- Authenticated users may only update their own profile.
 -- ---------------------------------------------------------------------
 
-create policy "profiles_public_read"
+create policy profiles_public_read
   on identity.profiles
   for select
   to anon, authenticated
@@ -317,7 +317,7 @@ create policy "profiles_public_read"
   );
 
 
-create policy "profiles_self_update"
+create policy profiles_self_update
   on identity.profiles
   for update
   to authenticated
@@ -335,7 +335,7 @@ create policy "profiles_self_update"
 -- Only team members may read the team.
 -- ---------------------------------------------------------------------
 
-create policy "teams_member_read"
+create policy teams_member_read
   on identity.teams
   for select
   to authenticated
@@ -350,7 +350,7 @@ create policy "teams_member_read"
 -- Only members of a team may read its membership rows.
 -- ---------------------------------------------------------------------
 
-create policy "team_members_member_read"
+create policy team_members_member_read
   on identity.team_members
   for select
   to authenticated
@@ -368,7 +368,7 @@ create policy "team_members_member_read"
 --   * owner/admin of the team
 -- ---------------------------------------------------------------------
 
-create policy "membership_requests_relevant_parties_read"
+create policy membership_requests_relevant_parties_read
   on identity.team_membership_requests
   for select
   to authenticated
@@ -387,7 +387,7 @@ create policy "membership_requests_relevant_parties_read"
 -- Direct writes are owner-only.
 -- ---------------------------------------------------------------------
 
-create policy "projects_read"
+create policy projects_read
   on identity.projects
   for select
   to authenticated
@@ -400,7 +400,7 @@ create policy "projects_read"
   );
 
 
-create policy "projects_owner_insert"
+create policy projects_owner_insert
   on identity.projects
   for insert
   to authenticated
@@ -409,7 +409,7 @@ create policy "projects_owner_insert"
   );
 
 
-create policy "projects_owner_update"
+create policy projects_owner_update
   on identity.projects
   for update
   to authenticated
@@ -421,7 +421,7 @@ create policy "projects_owner_update"
   );
 
 
-create policy "projects_owner_delete"
+create policy projects_owner_delete
   on identity.projects
   for delete
   to authenticated

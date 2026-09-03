@@ -41,7 +41,7 @@ alter table identity.platform_roles enable row level security;
 
 -- Deliberately self-only: no public listing of who the moderators/admins
 -- are (avoids making them an enumerable social-engineering target).
-create policy "platform_roles_self_read"
+create policy platform_roles_self_read
   on identity.platform_roles
   for select
   to authenticated
@@ -232,7 +232,7 @@ alter table content.discussion_replies enable row level security;
 -- Therefore public and authenticated read access are deliberately split.
 -- ---------------------------------------------------------------------
 
-create policy "news_public_read"
+create policy news_public_read
   on content.news
   for select
   to anon
@@ -240,7 +240,7 @@ create policy "news_public_read"
   status = 'published'
   );
 
-create policy "news_authenticated_read"
+create policy news_authenticated_read
   on content.news
   for select
   to authenticated
@@ -250,7 +250,7 @@ create policy "news_authenticated_read"
     or identity.is_platform_moderator()
   );
 
-create policy "news_moderator_insert"
+create policy news_moderator_insert
   on content.news
   for insert
   to authenticated
@@ -259,7 +259,7 @@ create policy "news_moderator_insert"
     and author_id = auth.uid()
   );
 
-create policy "news_moderator_update"
+create policy news_moderator_update
   on content.news
   for update
   to authenticated
@@ -270,7 +270,7 @@ create policy "news_moderator_update"
   identity.is_platform_moderator()
   );
 
-create policy "news_moderator_delete"
+create policy news_moderator_delete
   on content.news
   for delete
   to authenticated
@@ -287,13 +287,13 @@ create policy "news_moderator_delete"
 -- block a different moderator from editing an existing poll if reused
 -- for update.
 
-create policy "polls_public_read"
+create policy polls_public_read
   on content.polls
   for select
   to anon, authenticated
   using (true);
 
-create policy "polls_moderator_insert"
+create policy polls_moderator_insert
   on content.polls
   for insert
   to authenticated
@@ -302,7 +302,7 @@ create policy "polls_moderator_insert"
     and created_by = auth.uid()
   );
 
-create policy "polls_moderator_update"
+create policy polls_moderator_update
   on content.polls
   for update
   to authenticated
@@ -313,7 +313,7 @@ create policy "polls_moderator_update"
   identity.is_platform_moderator()
   );
 
-create policy "polls_moderator_delete"
+create policy polls_moderator_delete
   on content.polls
   for delete
   to authenticated
@@ -321,13 +321,13 @@ create policy "polls_moderator_delete"
   identity.is_platform_moderator()
   );
 
-create policy "poll_options_public_read"
+create policy poll_options_public_read
   on content.poll_options
   for select
   to anon, authenticated
   using (true);
 
-create policy "poll_options_moderator_write"
+create policy poll_options_moderator_write
   on content.poll_options
   for all
   to authenticated
@@ -347,7 +347,7 @@ create policy "poll_options_moderator_write"
 -- Immutable -- no update/delete policy.
 -- ---------------------------------------------------------------------
 
-create policy "poll_votes_self_read"
+create policy poll_votes_self_read
   on content.poll_votes
   for select
   to authenticated
@@ -355,7 +355,7 @@ create policy "poll_votes_self_read"
   user_id = auth.uid()
   );
 
-create policy "poll_votes_self_insert"
+create policy poll_votes_self_insert
   on content.poll_votes
   for insert
   to authenticated
@@ -363,8 +363,8 @@ create policy "poll_votes_self_insert"
   user_id = auth.uid()
     and exists (
     select 1
-    from content.polls p
-    where p.id = poll_id
+    from content.polls as p
+    where p.id = poll_votes.poll_id
       and (
       p.closes_at is null
         or p.closes_at > now()
@@ -379,13 +379,13 @@ create policy "poll_votes_self_insert"
 -- unlocked) or a moderator (always) can edit/delete.
 -- ---------------------------------------------------------------------
 
-create policy "discussions_public_read"
+create policy discussions_public_read
   on content.discussions
   for select
   to anon, authenticated
   using (true);
 
-create policy "discussions_authenticated_insert"
+create policy discussions_authenticated_insert
   on content.discussions
   for insert
   to authenticated
@@ -393,7 +393,7 @@ create policy "discussions_authenticated_insert"
   author_id = auth.uid()
   );
 
-create policy "discussions_author_or_moderator_update"
+create policy discussions_author_or_moderator_update
   on content.discussions
   for update
   to authenticated
@@ -409,7 +409,7 @@ create policy "discussions_author_or_moderator_update"
     or identity.is_platform_moderator()
   );
 
-create policy "discussions_author_or_moderator_delete"
+create policy discussions_author_or_moderator_delete
   on content.discussions
   for delete
   to authenticated
@@ -432,13 +432,13 @@ create policy "discussions_author_or_moderator_delete"
 -- No delete policy -- moderation is soft-delete only.
 -- ---------------------------------------------------------------------
 
-create policy "discussion_replies_public_read"
+create policy discussion_replies_public_read
   on content.discussion_replies
   for select
   to anon, authenticated
   using (true);
 
-create policy "discussion_replies_authenticated_insert"
+create policy discussion_replies_authenticated_insert
   on content.discussion_replies
   for insert
   to authenticated
@@ -446,13 +446,13 @@ create policy "discussion_replies_authenticated_insert"
   author_id = auth.uid()
     and exists (
     select 1
-    from content.discussions d
-    where d.id = discussion_id
+    from content.discussions as d
+    where d.id = discussion_replies.discussion_id
       and not d.is_locked
   )
   );
 
-create policy "discussion_replies_author_or_moderator_update"
+create policy discussion_replies_author_or_moderator_update
   on content.discussion_replies
   for update
   to authenticated

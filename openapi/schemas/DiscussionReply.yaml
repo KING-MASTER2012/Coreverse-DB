@@ -15,12 +15,12 @@ properties:
     format: uuid
   body:
     type: string
-    nullable: true
+    type: ["string", "null"]
     description: null/omitted when deleted_at is set -- render as "[deleted]".
   deleted_at:
     type: string
     format: date-time
-    nullable: true
+    type: ["string", "null"]
   created_at:
     type: string
     format: date-time

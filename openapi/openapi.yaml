@@ -8,6 +8,8 @@ info:
     Coreverse Website consume this API and never access Postgres/Supabase
     directly.
   version: 0.1.0
+  license:
+    name: GPL-3.0-only
 servers:
   - url: https://wsbahvnrttaepnabnbqn.supabase.co/functions/v1
     description: Supabase Edge Functions (production)
@@ -85,7 +87,7 @@ paths:
     $ref: './paths/discussions.yaml#/byId'
   /discussions/{discussionId}/replies:
     $ref: './paths/discussions.yaml#/replies'
-  /discussions/replies/{replyId}:
+  /replies/{replyId}:
     $ref: './paths/discussions.yaml#/replyById'
   /docs/sources:
     $ref: './paths/docs.yaml#/sources'

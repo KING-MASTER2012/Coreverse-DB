@@ -12,7 +12,7 @@ properties:
   closes_at:
     type: string
     format: date-time
-    nullable: true
+    type: ["string", "null"]
   options:
     type: array
     items:

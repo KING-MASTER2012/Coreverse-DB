@@ -26,6 +26,6 @@ Deno.test('CreatePollSchema rejects a non-datetime closes_at', () => {
 Deno.test('CastVoteSchema requires a valid uuid option_id', () => {
   assertFalse(CastVoteSchema.safeParse({ option_id: '1', },).success,);
   assert(
-    CastVoteSchema.safeParse({ option_id: '11111111-1111-1111-1111-111111111111', },).success,
+    CastVoteSchema.safeParse({ option_id: '550e8400-e29b-41d4-a716-446655440000', },).success,
   );
 });
