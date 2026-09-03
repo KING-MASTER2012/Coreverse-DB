@@ -1,0 +1,43 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - duplicate
+      - invalid
+      - wontfix
+    authors:
+      - dependabot
+  categories:
+    - title: ⚠️ Breaking Changes
+      labels:
+        - breaking-change
+    - title: ✨ New Features
+      labels:
+        - enhancement
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+    - title: 🗄️ Database & Migrations
+      labels:
+        - migration
+        - rls
+    - title: 📄 API Contract & Generated Client
+      labels:
+        - openapi
+        - client
+    - title: 🔒 Security
+      labels:
+        - security
+    - title: 📦 Dependencies
+      labels:
+        - dependencies
+    - title: 🧰 Tooling & CI
+      labels:
+        - ci
+        - tooling
+    - title: 📚 Documentation
+      labels:
+        - documentation
+    - title: Other Changes
+      labels:
+        - "*"

@@ -1,0 +1,22 @@
+# CODEOWNERS
+#
+# Requires branch protection ("Require review from Code Owners") to actually
+# block merges. Until then this only drives auto-requested reviewers.
+#
+# Order matters: later (more specific) patterns override earlier ones.
+
+# Default owner for everything not matched below.
+*                               @KING-MASTER2012
+
+# --- Contract & generated client -------------------------------------------
+/openapi/                      @KING-MASTER2012
+/src/                           @KING-MASTER2012
+/orval.config.ts                @KING-MASTER2012
+
+# --- Database & backend -------------------------------------------------
+/supabase/migrations/           @KING-MASTER2012
+/supabase/functions/            @KING-MASTER2012
+/supabase/tests/                @KING-MASTER2012
+
+# --- Governance / CI ------------------------------------------------------
+/.github/                       @KING-MASTER2012

@@ -1,0 +1,59 @@
+name: ✨ Feature Request
+description: Suggest a new endpoint, schema field, or capability for Coreverse DB.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a request, consider whether this belongs in Coreverse DB itself
+        (the shared data-access API) versus a consumer repo (Launcher / Website).
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      description: Which part of Coreverse DB does this touch?
+      options:
+        - releases
+        - identity (profiles / teams / requests)
+        - projects
+        - content (news / polls / discussions)
+        - docs
+        - openapi / generated client (src/)
+        - infrastructure (migrations / RLS / storage)
+        - new domain entirely
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What's missing or awkward today? Link to a consumer use case (Launcher/Website) if you have one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: New endpoint shape, schema change, RLS policy, etc. Sketch the OpenAPI operation/schema if you can.
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues/discussions and this hasn't been requested yet.
+          required: true

@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Root TS toolchain (orval, redocly, typescript, zod, ...) — pnpm-lock.yaml
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "chore(deps)"
+
+  # Workflow actions (actions/checkout, supabase/setup-cli, ...)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: "chore(ci)"
+
+# NOTE: Deno's import-map dependencies (supabase/functions/**, deno.json)
+# are not a supported Dependabot ecosystem as of this writing — there is no
+# "deno" package-ecosystem value. Track Deno dep updates manually (or via
+# `deno outdated` locally) until GitHub adds native support.

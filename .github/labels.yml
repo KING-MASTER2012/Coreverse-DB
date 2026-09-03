@@ -1,0 +1,82 @@
+# Label definitions for Coreverse DB, synced to the repo by
+# .github/workflows/label-sync.yml (via EndBug/label-sync) whenever this
+# file changes on `main`. Edit here, don't edit labels directly on GitHub —
+# manual changes will be overwritten on the next sync.
+
+# --- Triage / workflow -------------------------------------------------
+- name: triage
+  color: "D93F0B"
+  description: Needs an initial look / classification.
+- name: bug
+  color: "D73A4A"
+  description: Something isn't working as documented.
+- name: enhancement
+  color: "A2EEEF"
+  description: New feature or capability request.
+- name: breaking-change
+  color: "B60205"
+  description: Changes the API/DB contract in a backward-incompatible way.
+- name: duplicate
+  color: "CFD3D7"
+  description: This issue or PR already exists.
+- name: invalid
+  color: "E4E669"
+  description: This doesn't seem right.
+- name: wontfix
+  color: "FFFFFF"
+  description: This will not be worked on.
+- name: ignore-for-release
+  color: "EDEDED"
+  description: Exclude from auto-generated release notes.
+- name: good first issue
+  color: "7057FF"
+  description: Good for newcomers.
+- name: help wanted
+  color: "008672"
+  description: Extra attention is needed.
+
+# --- Domain ---------------------------------------------------------------
+- name: releases
+  color: "0E8A16"
+  description: Engine release distribution domain.
+- name: identity
+  color: "0E8A16"
+  description: Profiles, teams, or membership requests.
+- name: projects
+  color: "0E8A16"
+  description: Project metadata domain.
+- name: content
+  color: "0E8A16"
+  description: News, polls, or discussions.
+- name: docs
+  color: "0E8A16"
+  description: Docs domain (sources/search/reindex) or repo documentation.
+- name: openapi
+  color: "1D76DB"
+  description: openapi/ contract changes.
+- name: client
+  color: "1D76DB"
+  description: Generated TS client (src/generated, src/client).
+- name: migration
+  color: "5319E7"
+  description: Database migration (supabase/migrations).
+- name: rls
+  color: "5319E7"
+  description: Row-Level Security policy change.
+
+# --- Ops --------------------------------------------------------------
+- name: security
+  color: "B60205"
+  description: Security-relevant change or report.
+- name: dependencies
+  color: "0366D6"
+  description: Dependency upgrades (usually from Dependabot).
+- name: ci
+  color: "FBCA04"
+  description: CI/CD workflow changes.
+- name: tooling
+  color: "FBCA04"
+  description: Dev tooling / scripts, not app behavior.
+- name: documentation
+  color: "0075CA"
+  description: Documentation-only change.
