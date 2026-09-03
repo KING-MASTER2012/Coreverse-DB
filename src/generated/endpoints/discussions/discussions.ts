@@ -396,7 +396,7 @@ export type updateDiscussionReplyResponse =
   updateDiscussionReplyResponseSuccess | updateDiscussionReplyResponseError;
 
 export const getUpdateDiscussionReplyUrl = (replyId: string) => {
-  return `/discussions/replies/${replyId}`;
+  return `/replies/${replyId}`;
 };
 
 /**
