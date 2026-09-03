@@ -21,4 +21,4 @@ properties:
     format: uri
   current_version_ref:
     type: string
-    type: ["string", "null"]
+    nullable: true

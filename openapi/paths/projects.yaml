@@ -40,8 +40,8 @@ list:
             required: [name, archive_path, archive_size_bytes, archive_sha256]
             properties:
               name: { type: string }
-              description: { type: string, type: ["string", "null"] }
-              team_id: { type: string, format: uuid, type: ["string", "null"] }
+              description: { type: string, nullable: true }
+              team_id: { type: string, format: uuid, nullable: true }
               archive_path: { type: string }
               archive_size_bytes: { type: integer, format: int64 }
               archive_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
@@ -85,7 +85,7 @@ byId:
             type: object
             properties:
               name: { type: string }
-              description: { type: string, type: ["string", "null"] }
+              description: { type: string, nullable: true }
     responses:
       '200':
         description: Updated project.

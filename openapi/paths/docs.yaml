@@ -83,7 +83,7 @@ reindex:
                   title: { type: string }
                   slug: { type: string }
                   base_url: { type: string, format: uri }
-                  current_version_ref: { type: string, type: ["string", "null"] }
+                  current_version_ref: { type: string, nullable: true }
               pages:
                 type: array
                 minItems: 1

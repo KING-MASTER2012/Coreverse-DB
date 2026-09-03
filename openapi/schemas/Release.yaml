@@ -20,7 +20,7 @@ properties:
     format: date
   release_notes_summary:
     type: string
-    type: ["string", "null"]
+    nullable: true
   artifacts:
     type: array
     items:

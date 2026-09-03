@@ -17,7 +17,7 @@ properties:
     format: uuid
   category:
     type: string
-    type: ["string", "null"]
+    nullable: true
   is_locked:
     type: boolean
   created_at:

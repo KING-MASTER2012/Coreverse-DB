@@ -23,4 +23,4 @@ properties:
   published_at:
     type: string
     format: date-time
-    type: ["string", "null"]
+    nullable: true

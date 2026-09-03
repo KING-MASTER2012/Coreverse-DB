@@ -24,6 +24,6 @@ properties:
     type: string
   snippet:
     type: string
-    type: ["string", "null"]
+    nullable: true
   rank:
     type: number

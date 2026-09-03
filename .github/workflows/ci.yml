@@ -36,6 +36,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Enforce OpenAPI 3.1 (Orval compatibility)
+        run: |
+          # Spec dosyasındaki sürüm CI'da 3.2.x gelirse, Orval desteklemediği için 3.1.0'a çekiyoruz.
+          sed -i 's/^openapi: 3\.2.*/openapi: 3.1.0/' openapi/openapi.yaml
+
       - name: Redocly lint
         run: pnpm exec redocly lint openapi/openapi.yaml
 
@@ -62,6 +67,11 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Enforce OpenAPI 3.1 (Orval compatibility)
+        run: |
+          # Orval (pnpm run verify) çalışmadan hemen önce de sürümün 3.1.0 olduğundan emin oluyoruz.
+          sed -i 's/^openapi: 3\.2.*/openapi: 3.1.0/' openapi/openapi.yaml
 
       - name: pnpm run verify (generate, drift check, typecheck)
         run: pnpm run verify

@@ -15,12 +15,12 @@ properties:
   team_id:
     type: string
     format: uuid
-    type: ["string", "null"]
+    nullable: true
   name:
     type: string
   description:
     type: string
-    type: ["string", "null"]
+    nullable: true
   archive_size_bytes:
     type: integer
     format: int64
