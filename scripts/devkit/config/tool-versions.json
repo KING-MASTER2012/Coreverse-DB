@@ -1,0 +1,50 @@
+{
+  "deno": {
+    "minVersion": "2.9.5",
+    "displayName": "Deno (runtime; also provides Lint / Fmt / Check / Inspector)",
+    "docsUrl": "https://docs.deno.com/runtime/getting_started/installation/",
+    "pkg": { "pacman": "deno", "brew": "deno" }
+  },
+  "node": {
+    "minVersion": "24.18.0",
+    "displayName": "Node.js (runtime for pnpm / tsc / vite / orval scripts)",
+    "docsUrl": "https://nodejs.org/en/download",
+    "pkg": { "pacman": "nodejs", "apt": "nodejs", "dnf": "nodejs", "zypper": "nodejs", "brew": "node" }
+  },
+  "pnpm": {
+    "minVersion": "9.12.0",
+    "displayName": "pnpm (via corepack)",
+    "docsUrl": "https://pnpm.io/installation",
+    "pkg": {}
+  },
+  "rustup": {
+    "minVersion": "1.29.0",
+    "displayName": "Rustup",
+    "docsUrl": "https://www.rust-lang.org/tools/install",
+    "pkg": {}
+  },
+  "cargo": {
+    "minVersion": "1.97.1",
+    "displayName": "Cargo",
+    "docsUrl": "https://www.rust-lang.org/tools/install",
+    "pkg": {}
+  },
+  "mdbook": {
+    "minVersion": "0.5.4",
+    "displayName": "mdBook (docs; kept from the engine devkit - no winget/pip package, cargo install only)",
+    "docsUrl": "https://rust-lang.github.io/mdBook/",
+    "pkg": {}
+  },
+  "semgrep": {
+    "minVersion": "1.176.0",
+    "displayName": "Semgrep (optional static analyzer)",
+    "docsUrl": "https://semgrep.dev/docs/getting-started/",
+    "pkg": { "brew": "semgrep" }
+  },
+  "sqlfluff": {
+    "minVersion": "4.3.0",
+    "displayName": "SQLFluff (optional SQL lint + static analysis)",
+    "docsUrl": "https://docs.sqlfluff.com/en/stable/gettingstarted.html",
+    "pkg": {}
+  }
+}
