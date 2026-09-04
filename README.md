@@ -1,450 +1,533 @@
-<p style="text-align: center">
+<p style="text-align: left">
   <img src="assets/emblems/coreverse-emblem.svg" alt="Coreverse Emblem" width="160">
 </p>
 
-<h1 style="text-align: center">Coreverse DB</h1>
+# Coreverse DB
 
-<p style="text-align: center">
-  <strong>Centralized database and data-access infrastructure for the Coreverse ecosystem.</strong>
-</p>
+**Coreverse DB** is the centralized data-access and backend layer for the Coreverse ecosystem. It combines a Supabase/PostgreSQL database, a domain-oriented Edge Function API, a contract-first OpenAPI specification, and a generated TypeScript client into a single versioned backend repository.
 
-<p style="text-align: center">
-  Secure · Modular · API-driven · Migration-based
-</p>
+Coreverse applications such as the **Coreverse Launcher** and **Coreverse Website** consume the API exposed by this repository. They do **not** access PostgreSQL or Supabase data services directly.
 
----
+> **Project status:** Core implementation is complete. Documentation content, additional test coverage, and developer convenience scripts are being finalized.
 
-<p style="text-align: center">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="56" height="56" alt="PostgreSQL">
-  &nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" width="56" height="56" alt="Supabase">
-  &nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/denojs/denojs-original.svg" width="56" height="56" alt="Deno">
-  &nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="56" height="56" alt="Docker">
-  &nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="56" height="56" alt="Git">
-</p>
-
-<p style="text-align: center">
-  <sub>
-    PostgreSQL 17 · Supabase · Deno 2 · Docker · Git
-  </sub>
-</p>
-
-<p style="text-align: center">
-  <a href="https://www.postgresql.org/">PostgreSQL</a> ·
-  <a href="https://supabase.com/">Supabase</a> ·
-  <a href="https://deno.com/">Deno</a> ·
-  <a href="https://www.openapis.org/">OpenAPI</a> ·
-  <a href="https://www.docker.com/">Docker</a>
-</p>
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Platform-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Deno](https://img.shields.io/badge/Deno-2.x-000000?logo=deno&logoColor=white)](https://deno.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.1-6BA539?logo=openapiinitiative&logoColor=white)](https://www.openapis.org/)
+[![License](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 
 ---
 
-## ✨ Overview
+## Overview
 
-**Coreverse DB** is the centralized database and backend layer of the **Coreverse ecosystem**.
+Coreverse DB provides the shared backend capabilities required by the Coreverse platform:
 
-It provides a secure, structured, and version-controlled data platform for Coreverse applications and services, including:
+- Coreverse Engine release metadata and downloadable artifacts
+- User profiles, teams, roles, projects, and membership workflows
+- Platform news, polls, discussions, and replies
+- Documentation source registration and full-text search indexing
+- Secure project archive access through Supabase Storage
+- Authentication-aware API access using Supabase Auth JWTs
+- Row Level Security (RLS), PostgreSQL functions, constraints, and triggers for authorization and data integrity
+- A typed TypeScript SDK generated from the same OpenAPI contract used to define the API
 
-- Engine release distribution
-- User profiles and identity
-- Teams and memberships
-- Project metadata
-- Community news
-- Polls and voting
-- Discussions and replies
-- API access
-- File storage integration
+The project is intentionally organized around **clear domain boundaries** rather than treating the database, API, and client as unrelated components.
 
-Coreverse DB intentionally separates clients from the underlying PostgreSQL implementation.
+---
+
+## Architecture
+
+At a high level, the system follows this flow:
 
 ```text
-┌──────────────────────┐  ┌─────────────────────┐
-│  Coreverse Website   │  │  Coreverse Launcher │
-└──────────┬───────────┘  └──────────┬──────────┘
-           │                         │
-           ▼                         ▼            
-     ┌──────────────────────────────────────┐
-     │            Coreverse DB API          │
-     │        Supabase Edge Functions       │
-     └──────────────────┬───────────────────┘
-                        │
-                        ▼
-     ┌──────────────────────────────────────┐
-     │             PostgreSQL 17            │
-     │                                      │
-     │  releases · identity · content       │
-     │  RLS · Functions · Triggers          │
-     └──────────────────┬───────────────────┘
-                        │
-                        ▼
-               ┌─────────────────┐
-               │ Supabase Storage│
-               └─────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│                        Coreverse Ecosystem                    │
+│                                                               │
+│   Coreverse Launcher     Coreverse Website     Other Clients │
+└───────────────────────────────┬───────────────────────────────┘
+                                │
+                                │ HTTPS / JSON
+                                ▼
+┌───────────────────────────────────────────────────────────────┐
+│                    Supabase Edge Functions                    │
+│                                                               │
+│  releases  teams  requests  profiles  projects  news         │
+│  polls     discussions  docs                                 │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │ Shared HTTP / Supabase / service-role infrastructure   │  │
+│  └─────────────────────────────────────────────────────────┘  │
+└───────────────────────────────┬───────────────────────────────┘
+                                │
+                                │ User-scoped Supabase client
+                                ▼
+┌───────────────────────────────────────────────────────────────┐
+│                         PostgreSQL 17                         │
+│                                                               │
+│   releases   identity   content   docs   private helpers     │
+│                                                               │
+│   RLS + SECURITY DEFINER + constraints + triggers + RPCs     │
+└───────────────────────────────┬───────────────────────────────┘
+                                │
+                                ├──────────────► Supabase Auth
+                                │
+                                └──────────────► Supabase Storage
 ```
 
-Applications consume the Coreverse DB API rather than connecting directly to PostgreSQL.
+### Design principles
+
+**API-first access.** Consumer applications use the Edge Function API instead of connecting directly to PostgreSQL.
+
+**Domain-oriented database design.** Application data is separated into `releases`, `identity`, `content`, and `docs` schemas. Internal helper functions live in the restricted `private` schema.
+
+**Database-enforced authorization.** RLS is combined with PostgreSQL functions, constraints, and triggers. Important state transitions are performed through controlled RPC-style functions instead of relying exclusively on application code.
+
+**Contract-first API development.** `openapi/` is the authoritative API contract. The TypeScript client and generated Zod schemas are derived from it.
+
+**Least privilege.** User requests normally run through a JWT-scoped Supabase client. Service-role access is isolated to operations that explicitly require privileged access, such as documentation reindexing and signed project-download URLs.
 
 ---
 
-## 🚀 Key Features
+## Database Domains
 
-| Feature                        | Description                                                                    |
-| ------------------------------ | ------------------------------------------------------------------------------ |
-| 🔐 **Database-level Security** | PostgreSQL Row Level Security, controlled functions, constraints, and triggers |
-| 👤 **Identity Management**     | Profiles, teams, memberships, invitations, and ownership transfers             |
-| 📦 **Release Management**      | Engine versions, platform artifacts, requirements, and SHA-256 verification    |
-| 📰 **Community Content**       | News, polls, discussions, and replies                                          |
-| 🗃️ **Project Metadata**        | Ownership, team association, archive metadata, and integrity information       |
-| 📡 **OpenAPI Contract**        | Explicit OpenAPI 3.1 API specification                                         |
-| 🧪 **Testing**                 | pgTAP database tests and Deno Edge Function tests                              |
-| 🔄 **Migration-driven Schema** | Reproducible Supabase migrations                                               |
-| ☁️ **Storage Integration**     | Supabase Storage for binary/project assets                                     |
-| ⚡ **Edge Runtime**            | Deno 2-based Supabase Edge Functions                                           |
+### `releases`
+
+Stores Coreverse Engine release metadata and platform-specific artifacts.
+
+Key concepts:
+
+- semantic version components (`major`, `minor`, `patch`)
+- release status and metadata
+- per-platform artifacts
+- operating system and architecture information
+- download URLs, checksums, sizes, and minimum requirements
+
+The domain also exposes database functions for listing releases, resolving a release by version, and obtaining the latest release.
+
+### `identity`
+
+Contains user and collaboration data:
+
+- profiles
+- teams
+- team members and roles
+- membership requests, invitations, and ownership transfers
+- projects
+- platform roles
+
+Team lifecycle operations such as creating teams, changing membership, promoting or demoting members, leaving teams, and transferring ownership are implemented through database functions so authorization rules remain enforced at the database boundary.
+
+### `content`
+
+Contains user-facing platform content:
+
+- news
+- polls and poll options
+- poll votes
+- discussions
+- discussion replies
+
+Poll results are exposed as anonymous aggregates rather than exposing individual vote records. Discussion replies support soft deletion, and locked discussions prevent new replies.
+
+### `docs`
+
+Provides the documentation catalog and search index.
+
+The database stores documentation source metadata and indexed page text rather than acting as the canonical document host. Pages can be reindexed through the dedicated API endpoint, while search is performed using PostgreSQL full-text search.
+
+### Supabase Storage
+
+Storage is a platform service rather than a PostgreSQL application domain. Coreverse DB currently uses storage for:
+
+- user avatars (`avatars`)
+- project archives (`project-archives`)
+
+Project archive files are stored separately from their database metadata. Access is mediated through authorization checks and short-lived signed URLs.
 
 ---
 
-## 🧱 Technology Stack
+## Security Model
 
-| Layer             | Technology                  |
-| ----------------- | --------------------------- |
-| Database          | **PostgreSQL 17**           |
-| Backend Platform  | **Supabase**                |
-| API Runtime       | **Supabase Edge Functions** |
-| Edge Runtime      | **Deno 2**                  |
-| Database Language | **PL/pgSQL**                |
-| API Specification | **OpenAPI 3.1**             |
-| Authentication    | **Supabase Auth**           |
-| File Storage      | **Supabase Storage**        |
-| Database Testing  | **pgTAP**                   |
-| Function Testing  | **Deno Test**               |
-| Documentation     | **mdBook**                  |
-
----
-
-# 🏗️ Architecture
-
-Coreverse DB is organized around independent database domains.
-
-| Domain          | Responsibility                              | PostgreSQL Schema |
-| --------------- | ------------------------------------------- | ----------------- |
-| 📦 **Releases** | Engine releases and downloadable artifacts  | `releases`        |
-| 👤 **Identity** | Profiles, teams, memberships, and projects  | `identity`        |
-| 📰 **Content**  | News, polls, discussions, and replies       | `content`         |
-| 🔒 **Private**  | Internal security and authorization helpers | `private`         |
-
-### Releases
-
-The `releases` domain manages Coreverse Engine release metadata and downloadable artifacts.
-
-Each release contains general metadata, while artifacts are represented independently per platform and architecture.
-
-| Platform | Architectures     |
-| -------- | ----------------- |
-| Windows  | `x86_64`, `arm64` |
-| Linux    | `x86_64`, `arm64` |
-| macOS    | `x86_64`, `arm64` |
-
-Artifacts contain download URLs, SHA-256 hashes, file sizes, minimum requirements, and compiler metadata.
-
-### Identity
-
-The `identity` domain manages application-level identity and collaboration.
+Security is enforced in multiple layers:
 
 ```text
-identity
-├── profiles
-├── teams
-├── team_members
-├── team_membership_requests
-├── projects
-└── platform_roles
+Supabase Auth JWT
+       │
+       ▼
+Edge Function
+       │
+       ├── Request validation (Zod)
+       │
+       ▼
+User-scoped Supabase client
+       │
+       ▼
+Row Level Security (RLS)
+       │
+       ├── PostgreSQL functions / RPCs
+       ├── Constraints
+       └── Triggers
 ```
 
-Authentication is delegated to Supabase Auth. Coreverse DB never stores passwords.
-
-Team operations are protected through RLS and controlled database functions.
-
-### Content
-
-The `content` domain powers Coreverse community and website functionality.
+For the small number of privileged operations that require service-role access:
 
 ```text
-content
-├── news
-├── polls
-├── poll_options
-├── poll_votes
-├── discussions
-└── discussion_replies
+Authenticated / secret-authorized request
+                │
+                ▼
+        Access validation
+                │
+                ▼
+        Service-role operation
 ```
 
-The authorization model distinguishes between ordinary users and platform-level moderators/admins.
+The `/docs/reindex` operation uses a dedicated `X-Reindex-Token` shared secret instead of a user JWT. Project downloads first validate user access and then generate a short-lived signed Storage URL.
 
-Individual poll votes remain protected while aggregate results can be publicly exposed.
-
----
-
-# 🔐 Security Model
-
-Coreverse DB uses **defense in depth**, combining PostgreSQL RLS, database constraints, triggers, controlled functions, and Supabase authentication.
-
-| Mechanism                      | Purpose                               |
-| ------------------------------ | ------------------------------------- |
-| **Row Level Security**         | Per-row authorization                 |
-| **SECURITY DEFINER Functions** | Controlled privileged operations      |
-| **Constraints**                | Database-level data integrity         |
-| **Triggers**                   | Cross-row / lifecycle integrity rules |
-| **Supabase Auth**              | Authentication and user identity      |
-| **Least Privilege Grants**     | Restrict direct database operations   |
+For a deeper explanation of authentication, authorization, RLS, policy design, and Storage security, see the [documentation](docs/src/SUMMARY.md).
 
 ---
 
-# 📡 API
+## API
 
-The public API is formally defined using **OpenAPI 3.1**.
+The HTTP API is defined as an **OpenAPI 3.1.0** contract under [`openapi/`](openapi/).
 
-```text
-openapi/
-├── paths/
-├── schemas/
-└── openapi.yaml
+The API is organized into the following resources:
+
+| Resource      | Purpose                                                    |
+|---------------|------------------------------------------------------------|
+| `releases`    | Engine release metadata and artifacts                      |
+| `teams`       | Teams, roles, members, and membership operations           |
+| `requests`    | Accepting, rejecting, and cancelling membership requests   |
+| `profiles`    | Current user's profile                                     |
+| `projects`    | Project archive metadata and downloads                     |
+| `news`        | Platform news                                              |
+| `polls`       | Polls and anonymous aggregated results                     |
+| `discussions` | Discussions and replies                                    |
+| `docs`        | Documentation catalog, search, and reindexing              |
+
+The production Edge Function base URL is the Supabase Functions endpoint configured in the OpenAPI specification. Local development uses the URL exposed by `supabase start`.
+
+### Authentication
+
+Authenticated operations accept a Supabase Auth JWT through:
+
+```http
+Authorization: Bearer <JWT>
 ```
 
-### API Areas
+Public read operations do not require a bearer token. The documentation reindex endpoint uses its own `X-Reindex-Token` authentication mechanism.
 
-| Endpoint       | Purpose                        |
-| -------------- | ------------------------------ |
-| `/releases`    | Engine releases and artifacts  |
-| `/teams`       | Team management                |
-| `/requests`    | Membership request actions     |
-| `/profiles/me` | Current user's profile         |
-| `/projects`    | Project metadata and downloads |
-| `/news`        | Platform news                  |
-| `/polls`       | Polls, voting, and results     |
-| `/discussions` | Discussions and replies        |
+### Error model
+
+API errors use the shared `Error` OpenAPI schema, allowing generated clients and consumers to handle failures consistently across resources.
 
 ---
 
-# 📁 Repository Structure
+## TypeScript Client
+
+The repository also contains the `@coreverse/db-client` package, a typed TypeScript client generated from the OpenAPI contract.
 
 ```text
-Coreverse-DB/
-│
-├── assets/
-│   └── emblems/
-│       └── coreverse-emblem.svg
-│
-├── docs/
-│   ├── src/
-│   └── book.toml
-│
-├── openapi/
+openapi/openapi.yaml
+        │
+        ▼
+      Orval
+     /     \
+    ▼       ▼
+Fetch SDK   Zod schemas
+```
+
+Generated output lives under:
+
+```text
+src/generated/
+├── endpoints/   # typed fetch operations, split by API tag
+├── models/      # TypeScript models
+└── zod/         # generated Zod schemas
+```
+
+The runtime HTTP layer is centralized in [`src/client/http.ts`](src/client/http.ts), which provides the shared fetch behavior used by generated endpoints.
+
+### Source of truth
+
+`openapi/` is authoritative. `src/generated/` is derived output and should not be edited manually.
+
+The repository enforces this in CI by regenerating the client and failing when the generated output differs from the committed files.
+
+---
+
+## Repository Layout
+
+```text
+.
+├── openapi/                    # Authoritative API contract
+│   ├── openapi.yaml
 │   ├── paths/
-│   ├── schemas/
-│   └── openapi.yaml
+│   └── schemas/
+│
+├── src/                        # TypeScript client package
+│   ├── client/
+│   └── generated/
 │
 ├── supabase/
-│   ├── functions/
-│   ├── migrations/
+│   ├── functions/              # Edge Functions + Zod schemas/tests
+│   │   ├── _shared/
+│   │   ├── discussions/
+│   │   ├── docs/
+│   │   ├── news/
+│   │   ├── polls/
+│   │   ├── profiles/
+│   │   ├── projects/
+│   │   ├── releases/
+│   │   ├── requests/
+│   │   └── teams/
+│   │
+│   ├── migrations/             # Versioned PostgreSQL migrations
 │   ├── tests/
-│   ├── seed.sql
-│   └── config.toml
+│   │   ├── database/           # pgTAP database-function tests
+│   │   └── rls/                # pgTAP authorization/RLS tests
+│   ├── seed.sql                 # Local development seed data
+│   └── config.toml              # Local Supabase configuration
 │
-├── .env.example
-├── deno.json
-├── deno.lock
-├── LICENSE
-└── README.md
+├── docs/                       # mdBook documentation
+│   ├── src/
+│   └── theme/
+│
+├── assets/                     # Project branding assets
+├── .github/                    # CI, security scanning, and repo policy
+├── deno.json                   # Deno tasks and Edge Function formatting
+├── package.json                # TypeScript client tooling
+├── orval.config.ts             # Client/codegen configuration
+├── .sqlfluff                   # PostgreSQL migration lint configuration
+└── LICENSE                     # GPL-3.0-only
 ```
 
 ---
 
-# 🛠️ Development
+## Testing
 
-## Requirements
+Testing is split by responsibility.
 
-| Tool             | Purpose                               |
-| ---------------- | ------------------------------------- |
-| **Git**          | Source control                        |
-| **Docker**       | Local Supabase infrastructure         |
-| **Supabase CLI** | Database and local backend management |
-| **Deno 2**       | Edge Function runtime and testing     |
+### Deno unit tests
 
-## Clone
+Edge Function request schemas are tested independently with Deno and Zod. These tests do not require a running PostgreSQL instance.
+
+Run:
 
 ```bash
-git clone https://github.com/KING-MASTER2012/Coreverse-DB.git
-cd Coreverse-DB
+deno task test
 ```
 
-## Environment
+### Database and RLS tests
 
-### Linux / macOS
+PostgreSQL behavior is tested with **pgTAP** against a local Supabase stack. Database-function tests and RLS tests are intentionally separated.
+
+Run:
 
 ```bash
-cp .env.example .env
+supabase start
+supabase test db
 ```
 
-### Windows PowerShell
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Never commit credentials, service-role keys, OAuth secrets, JWT signing keys, or other sensitive values.
+The CI pipeline also runs database linting before the pgTAP suite.
 
 ---
 
-## ▶️ Start Local Supabase
+## Development
+
+### Requirements
+
+A complete local development environment requires:
+
+- **Node.js 22+** for the TypeScript client tooling
+- **pnpm 9.12.0** for package management
+- **Deno 2.x** for Edge Function development and unit tests
+- **Supabase CLI**
+- **Docker** for the local Supabase/PostgreSQL stack
+- **Git**
+
+### Install JavaScript dependencies
+
+```bash
+pnpm install
+```
+
+### Start local Supabase
 
 ```bash
 supabase start
 ```
 
-| Service         |    Port |
-| --------------- | ------: |
-| Supabase API    | `54321` |
-| PostgreSQL      | `54322` |
-| Supabase Studio | `54323` |
-| Mail Testing UI | `54324` |
+This starts the local Supabase services and applies the versioned migrations.
 
----
+### Generate the TypeScript client
 
-## ♻️ Reset the Database
+```bash
+pnpm generate
+```
+
+### Type-check the client
+
+```bash
+pnpm typecheck
+```
+
+### Verify generated output
+
+```bash
+pnpm verify
+```
+
+`pnpm verify` regenerates the client, checks for generated-code drift, and runs TypeScript type-checking.
+
+### Reset the local database
 
 ```bash
 supabase db reset
 ```
 
-This recreates the local database from the project's migrations and seed data.
+This rebuilds the local database from the migration history and seed data.
 
 ---
 
-## ⚡ Edge Functions
+## Continuous Integration
 
-Development:
+GitHub Actions validates the repository through separate quality gates:
 
-```bash
-deno task dev
-```
+| Workflow / Job      | Responsibility                                                                |
+|---------------------|-------------------------------------------------------------------------------|
+| OpenAPI lint        | Validates the API contract with Redocly                                       |
+| Client verification | Regenerates Orval output, checks for drift, and runs TypeScript type-checking |
+| Deno unit tests     | Executes Zod/Edge Function schema tests and formatting checks                 |
+| Supabase pgTAP      | Starts local Supabase, lints the database, and runs DB/RLS tests              |
+| SQLFluff            | Lints PostgreSQL migrations                                                   |
+| CodeQL              | Performs security analysis for TypeScript/JavaScript                          |
+| Semgrep             | Performs additional static security analysis                                  |
 
-Testing:
-
-```bash
-deno task test
-```
-
----
-
-# 🧪 Testing
-
-Testing is divided into database-level and Edge Function tests.
-
-### Database Testing
-
-Database tests use **pgTAP** and cover areas such as:
-
-- RLS behavior
-- Authorization boundaries
-- Database functions
-- Constraints
-- Triggers
-- Data integrity
-- State transitions
-
-### Edge Function Testing
-
-```bash
-deno task test
-```
+The main CI workflow exposes a single `ci-required` status used as the aggregate required check for branch protection.
 
 ---
 
-# 🔄 Database Migrations
+## OpenAPI and Code Generation Workflow
 
-Schema changes are tracked through timestamped Supabase migrations.
+Changes to the HTTP API should follow this direction:
 
 ```text
-supabase/migrations/
-├── <timestamp>_<description>.sql
-├── <timestamp>_<description>.sql
-└── ...
+1. Edit openapi/paths/ or openapi/schemas/
+              │
+              ▼
+2. Lint the OpenAPI contract
+              │
+              ▼
+3. Regenerate with Orval
+              │
+              ▼
+4. Review src/generated/
+              │
+              ▼
+5. Run type-checking and tests
 ```
 
-Migrations should remain deterministic, ordered, reproducible, and reviewable.
+Do not manually patch generated files to change API behavior. Change the OpenAPI contract and regenerate instead.
 
 ---
 
-# 📚 Documentation
+## Database Change Workflow
 
-Coreverse DB documentation is maintained with **mdBook**.
+Database changes are made through versioned migrations in [`supabase/migrations/`](supabase/migrations/).
+
+Typical development flow:
 
 ```text
-docs/
-├── src/
-└── book.toml
+Create migration
+      │
+      ▼
+Reset local database
+      │
+      ▼
+Run pgTAP tests
+      │
+      ▼
+Run database lint
+      │
+      ▼
+Review RLS / constraints / functions / triggers
 ```
 
-Documentation title:
-
-> **Coreverse DB Documentation**
+When a migration changes externally observable API behavior, the OpenAPI contract and generated client should be updated in the same change.
 
 ---
 
-# 📐 Design Principles
+## Configuration
 
-| Principle                      | Goal                                                  |
-| ------------------------------ | ----------------------------------------------------- |
-| **Database Authority**         | PostgreSQL is authoritative for data integrity        |
-| **Server-side Authorization**  | Security decisions never rely solely on clients       |
-| **RLS-first Security**         | Row-level access is enforced by PostgreSQL            |
-| **Transactional Operations**   | Multi-step state changes occur atomically             |
-| **API Decoupling**             | Clients depend on the API rather than internal tables |
-| **Migration-driven Evolution** | Schema changes remain reproducible                    |
-| **Explicit Contracts**         | API behavior is documented through OpenAPI            |
-| **Separated Storage**          | Binary assets live in object storage                  |
-| **Least Privilege**            | Database roles receive only required permissions      |
+The repository includes [`.env.example`](.env.example) as the baseline for environment configuration.
 
----
+Current environment variables include:
 
-# 🔗 Coreverse Ecosystem
+| Variable                   | Purpose                                                    |
+|----------------------------|------------------------------------------------------------|
+| `PUBLIC_SUPABASE_URL`      | Client-side Supabase project URL                           |
+| `PUBLIC_SUPABASE_ANON_KEY` | Client-side Supabase anonymous key                         |
+| `DATABASE_PASSWORD`        | Database password for development/administration workflows |
+| `SUPABASE_SECRET_KEY`      | Server-side Supabase secret key                            |
+| `DATABASE_URL`             | Direct PostgreSQL connection URL                           |
 
-| Project                | Role                                 |
-| ---------------------- | ------------------------------------ |
-| **Coreverse Engine**   | Engine and runtime                   |
-| **Coreverse Launcher** | Engine installation and distribution |
-| **Coreverse Website**  | Public website and community         |
-| **Coreverse DB**       | Centralized data and backend layer   |
+> Never commit real credentials, Supabase secret keys, database passwords, or reindex tokens to the repository.
 
 ---
 
-# 📌 Project Status
+## Documentation
 
-> **Development / Early Stage**
+The project uses **mdBook** for its developer documentation.
 
-Coreverse DB is actively evolving alongside the rest of the Coreverse ecosystem.
+Documentation source:
 
-Database schemas, API contracts, RLS policies, migrations, and internal implementation details may change between development versions.
+```text
+docs/src/
+```
 
-Production integrations should rely on versioned API and database contracts rather than unreleased internal behavior.
+The documentation structure currently covers:
+
+- introduction and project concepts
+- getting started and local development
+- system and database architecture
+- security, authentication, authorization, and RLS
+- database schemas, tables, functions, and triggers
+- HTTP API resources and conventions
+- OpenAPI and code generation
+- development and testing workflows
+- deployment and operational procedures
+- reference material and contribution guidelines
+
+The documentation entry point is [`docs/src/SUMMARY.md`](docs/src/SUMMARY.md).
 
 ---
 
-# 📄 License
+## License
 
-Coreverse DB is licensed under the **GNU General Public License v3.0**.
+Coreverse DB is licensed under the **GNU General Public License v3.0 only**.
 
 See [`LICENSE`](LICENSE) for the complete license text.
 
 ---
 
-<p style="text-align: center">
-  <img src="assets/emblems/coreverse-emblem.svg" alt="Coreverse" width="72">
-  <br>
-  <strong>Coreverse DB</strong>
-  <br>
-  <sub>Centralized data infrastructure for the Coreverse ecosystem.</sub>
-</p>
+## Contributing
+
+Contributions should preserve the project's architectural boundaries, security model, and source-of-truth rules.
+
+Before opening a pull request, make sure relevant checks pass locally, especially:
+
+```bash
+pnpm verify
+deno task test
+supabase test db
+```
+
+For detailed contribution rules, coding conventions, migration guidelines, and testing practices, see [`docs/src/SUMMARY.md`](docs/src/SUMMARY.md).
+
+---
+
+## Coreverse Ecosystem
+
+Coreverse DB is a backend component of the broader Coreverse ecosystem. It is designed to provide a stable, centralized data and API boundary for Coreverse clients while keeping database implementation details behind the service layer.
